@@ -1,0 +1,12 @@
+#EXCEPTION LIST
+messages:
+  9000:
+    message: 'Hata mesajı tanımı unutulmustur rest_messages.yaml kontrol edin.'
+    description: 'Hata mesajı tanımı unutulmustur rest_messages.yaml kontrol edin.'
+  9100:
+    message: '%s idli %s entitysi bulunamadı.'
+    description: '%s idli %s entitysi bulunamadı.'
+  1000:
+    message: Kullanıcı Adı veya Şifre hatalı
+    description: Kullanıcı Adı veya Şifre hatalı
+    fields: username,password

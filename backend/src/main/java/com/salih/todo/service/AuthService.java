@@ -117,6 +117,10 @@ public class AuthService {
             return ResponseEntity.badRequest().body("Error: Email is already in use!");
         }
 
+        if (signUpRequest.getEmail() == null){
+            return ResponseEntity.badRequest().body("Error: Email can not be null!");
+        }
+
         User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), signUpRequest.getEmail());
         if (signUpRequest.getRole() != null){
             Set<String> strRoles = signUpRequest.getRole();

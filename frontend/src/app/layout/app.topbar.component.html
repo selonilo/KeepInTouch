@@ -23,8 +23,11 @@
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
-            <p-overlayPanel #op1 [showCloseIcon]="true" [style]="{width: '450px'}">
-                <img src="assets/demo/images/nature/nature1.jpg" alt="Nature 1" style="width:100%"/>
+            <p-overlayPanel #op1 [showCloseIcon]="true" [style]="{width: '150px'}">
+                <div class="flex flex-wrap gap-2">
+                    <button pButton pRipple type="button" icon="pi pi-user" class="p-button-rounded p-button-info"></button>
+                    <button pButton pRipple type="button" (click)="logOut()" icon="pi pi-times" class="p-button-rounded p-button-danger"></button>
+                </div>
             </p-overlayPanel>
         </div>
         <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">

@@ -42,7 +42,8 @@ export class LoginComponent {
     this.user.email = this.email;
     this.user.password = this.password;
     this.authService.login(this.user).subscribe(response => {
-      localStorage.setItem('token',response.token)
+      localStorage.setItem('token',response.token);
+      localStorage.setItem('userId',response.id);
       this.sweetAlertService.showSuccessToast("Başarılı","Hoşgeldiniz " + response.username);
       this.router.navigate(['/']);
     },

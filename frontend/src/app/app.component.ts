@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.primengConfig.ripple = true;
-        if (localStorage.getItem('token')){
+        if (localStorage.getItem('token') && localStorage.getItem('token') == ''){
             this.router.navigate(['/auth/login']);
         }
     }

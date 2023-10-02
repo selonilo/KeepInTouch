@@ -10,6 +10,7 @@ export class AuthService {
     private apiUrl = 'http://localhost:8080/api/auth';
     private registerUrl = '/register';
     private loginUrl = '/login';
+    private logOutUrl = '/logout';
 
     constructor(private http: HttpClient) { }
 
@@ -19,5 +20,9 @@ export class AuthService {
 
     login(user: any): Observable<any> {
         return this.http.post<any>(this.apiUrl + this.loginUrl ,user);
+    }
+
+    logOut(user: any): Observable<any> {
+        return this.http.post<any>(this.apiUrl + this.logOutUrl ,user);
     }
 }

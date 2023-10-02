@@ -18,6 +18,11 @@ import { AppConfigModule } from './config/config.module';
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
+import { ButtonDemoRoutingModule } from '../demo/components/uikit/button/buttondemo-routing.module';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @NgModule({
     declarations: [
@@ -41,7 +46,12 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
         RippleModule,
         RouterModule,
         AppConfigModule,
-        OverlayPanelModule
+        OverlayPanelModule,
+        CommonModule,
+		ButtonDemoRoutingModule,
+		ButtonModule,
+		SplitButtonModule,
+		ToggleButtonModule
     ],
     exports: [AppLayoutComponent]
 })

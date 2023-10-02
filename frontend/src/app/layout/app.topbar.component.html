@@ -17,10 +17,16 @@
             <i class="pi pi-calendar"></i>
             <span>Calendar</span>
         </button>
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-user"></i>
-            <span>Profile</span>
-        </button>
+        
+        <div>
+            <button class="p-link layout-topbar-button" (click)="op1.toggle($event)">
+                <i class="pi pi-user"></i>
+                <span>Profile</span>
+            </button>
+            <p-overlayPanel #op1 [showCloseIcon]="true" [style]="{width: '450px'}">
+                <img src="assets/demo/images/nature/nature1.jpg" alt="Nature 1" style="width:100%"/>
+            </p-overlayPanel>
+        </div>
         <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
             <i class="pi pi-cog"></i>
             <span>Settings</span>

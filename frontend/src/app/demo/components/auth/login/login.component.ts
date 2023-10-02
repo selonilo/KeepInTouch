@@ -43,7 +43,7 @@ export class LoginComponent {
     this.user.password = this.password;
     this.authService.login(this.user).subscribe(response => {
       localStorage.setItem('token',response.token)
-      this.sweetAlertService.showSuccessAlert("");
+      this.sweetAlertService.showSuccessToast("Başarılı","Hoşgeldiniz " + response.username);
       this.router.navigate(['/']);
     },
       error => {

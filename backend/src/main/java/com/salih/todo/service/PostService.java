@@ -40,7 +40,7 @@ public class PostService {
             post.setUser(user.get());
         }
         else {
-            throw new KullaniciBulunamadiException(postDto.getName());
+            throw new KullaniciBulunamadiException(postDto.getUserId().toString());
         }
         postRepository.save(post);
         return postDto;

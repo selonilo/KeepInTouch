@@ -15,12 +15,12 @@ public abstract class BaseController {
     static final String PUBLIC_AUTH_UPDATE = PUBLIC + "/auth/update";
     static final String PUBLIC_AUTH_SAVE = PUBLIC + "/auth/save";
 
-    //todo
-    static final String PUBLIC_FIND_ALL_TODO = PUBLIC + "/todo/getAll";
-    static final String PUBLIC_SAVE_TODO = PUBLIC + "/todo/save";
-    static final String PUBLIC_DELETE_TODO = PUBLIC + "/todo/delete";
-    static final String PUBLIC_UPDATE_TODO = PUBLIC + "/todo/update";
-    static final String PUBLIC_GET_BY_USER_ID = PUBLIC + "/todo";
+    //post
+    static final String PUBLIC_FIND_ALL_POST = PUBLIC + "/post/getAll";
+    static final String PUBLIC_SAVE_POST = PUBLIC + "/post/save";
+    static final String PUBLIC_DELETE_POST = PUBLIC + "/post/delete";
+    static final String PUBLIC_UPDATE_POST = PUBLIC + "/post/update";
+    static final String PUBLIC_GET_BY_USER_ID = PUBLIC + "/post";
 
 
 }

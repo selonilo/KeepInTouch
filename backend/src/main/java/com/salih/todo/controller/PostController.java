@@ -16,7 +16,7 @@ public class PostController extends BaseController{
         this.postService = postService;
     }
 
-    @GetMapping(PUBLIC_FIND_ALL_TODO)
+    @GetMapping(PUBLIC_FIND_ALL_POST)
     public List<PostDto> getAll(){
         return postService.getAll();
     }
@@ -27,17 +27,17 @@ public class PostController extends BaseController{
         return postDtos;
     }
 
-    @PostMapping(PUBLIC_SAVE_TODO)
+    @PostMapping(PUBLIC_SAVE_POST)
     public ResponseEntity<PostDto> save(@RequestBody PostDto postDto){
         return ResponseEntity.ok(postService.save(postDto));
     }
 
-    @DeleteMapping(PUBLIC_DELETE_TODO+"/{id}")
+    @DeleteMapping(PUBLIC_DELETE_POST+"/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable(value = "id",required = true)Long id){
         return ResponseEntity.ok(postService.delete(id));
     }
 
-    @PostMapping(PUBLIC_UPDATE_TODO)
+    @PostMapping(PUBLIC_UPDATE_POST)
     public ResponseEntity<PostDto> update(@RequestBody PostDto postDto){
         return ResponseEntity.ok(postService.update(postDto));
     }

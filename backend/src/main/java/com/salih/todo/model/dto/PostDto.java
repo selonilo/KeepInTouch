@@ -7,8 +7,9 @@ import java.time.LocalDateTime;
 public class PostDto {
 
     private Long id;
-    private String name;
+    private String description;
     private Long userId;
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
+    private String username;
 }

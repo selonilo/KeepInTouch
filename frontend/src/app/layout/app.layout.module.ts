@@ -23,6 +23,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonDemoRoutingModule } from '../demo/components/uikit/button/buttondemo-routing.module';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { MenuModule } from 'primeng/menu';
 
 @NgModule({
     declarations: [
@@ -51,7 +52,8 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 		ButtonDemoRoutingModule,
 		ButtonModule,
 		SplitButtonModule,
-		ToggleButtonModule
+		ToggleButtonModule,
+        MenuModule
     ],
     exports: [AppLayoutComponent]
 })

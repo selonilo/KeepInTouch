@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from "./service/app.layout.service";
 import { AuthService } from '../demo/service/auth.service';
@@ -9,9 +9,9 @@ import { Router } from '@angular/router';
     selector: 'app-topbar',
     templateUrl: './app.topbar.component.html'
 })
-export class AppTopBarComponent {
+export class AppTopBarComponent implements OnInit {
 
-    items!: MenuItem[];
+    plainMenuItems: MenuItem[] = [];
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 
@@ -23,6 +23,29 @@ export class AppTopBarComponent {
         private authService: AuthService,
         private sweetAlertService: SweetAlertService,
         private router: Router) { }
+
+    ngOnInit(): void {
+        this.plainMenuItems = [
+            {
+                items: [
+                    {
+                        label: 'Profile',
+                        icon: 'pi pi-fw pi-user',
+                        command: () => {
+                            console.log('Ana Sayfa Tıklandı');
+                          }
+                    },
+                    {
+                        label: 'Logout',
+                        icon: 'pi pi-fw pi-times',
+                        command: () => {
+                            this.logOut();
+                          }
+                    }
+                ] 
+            }
+        ];
+    }
 
     user = {
         userId: 1

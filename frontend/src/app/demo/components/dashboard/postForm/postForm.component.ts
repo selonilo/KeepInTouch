@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
 import { Post } from 'src/app/demo/api/post';
 import { PostService } from 'src/app/demo/service/post.service';
+import { SweetAlertService } from 'src/app/demo/service/sweetAlertService';
 
 @Component({
     selector: 'app-post-form',
@@ -19,7 +20,8 @@ export class PostFormComponent implements OnInit, OnDestroy {
 
     userId?: number;
 
-    constructor(private postService: PostService) {
+    constructor(private postService: PostService,
+        private sweetAlertService: SweetAlertService) {
     }
 
     ngOnInit() {
@@ -51,6 +53,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
         this.postService.update(this.post).subscribe(() => {
             this.postSaved.emit();
             this.value = "";
+            this.sweetAlertService.showSuccessToast("Başarılı", "Post güncellendi");
         })
     }
 

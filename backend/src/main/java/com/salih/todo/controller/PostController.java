@@ -28,7 +28,7 @@ public class PostController extends BaseController{
     }
 
     @PostMapping(PUBLIC_SAVE_POST)
-    public ResponseEntity<PostDto> save(@RequestBody PostDto postDto){
+    public ResponseEntity<PostDto> save(@RequestBody PostDto postDto) {
         return ResponseEntity.ok(postService.save(postDto));
     }
 

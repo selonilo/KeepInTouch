@@ -21,6 +21,7 @@
                 {{post.updatedAt.split('T')[0]}}
             </p>
         </p-panel>
+        <br>
     </div>
 </div>
 <app-post-form (postSaved)="onPostSaved()" [value]="value" [isUpdate]="isUpdate" [updatePostModal]="updatePostModal" [display]="display"></app-post-form>

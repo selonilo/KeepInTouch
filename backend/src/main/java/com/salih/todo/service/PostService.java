@@ -32,7 +32,10 @@ public class PostService {
         return PostMapper.mapToList(postRepository.getByUserId(id));
     }
 
-    public PostDto save(PostDto postDto){
+    public PostDto save(PostDto postDto) {
+        if (postDto.getDescription() == null){
+            throw new IllegalArgumentException("description is null");
+        }
         Post post = PostMapper.mapTo(postDto);
 
         Optional<User> user = userRepository.findById(postDto.getUserId());
@@ -55,7 +58,6 @@ public class PostService {
         Optional<Post> todoOptional = postRepository.findById(postDto.getId());
         if(todoOptional.isPresent()){
             Post post = todoOptional.get();
-            PostMapper.updateSubLocation(post, postDto);
             postRepository.save(post);
         }
         else {

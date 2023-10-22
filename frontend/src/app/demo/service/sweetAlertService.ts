@@ -31,5 +31,17 @@ export class SweetAlertService {
       timer: 3000 // Uyarının ne kadar süreyle görüneceğini belirleyin (ms cinsinden).
     });
   }
+
+  showErrorToast(title:any, text:any){
+    Swal.fire({
+      icon: 'error',
+      title: title,
+      text: text,
+      toast: true, // Yandan çıkan uyarı (toast) olarak göstermek için bu seçeneği kullanın.
+      position: 'top-end', // Uyarının nerede görüneceğini belirleyin.
+      showConfirmButton: false, // Onay düğmesini gizleyin, sadece bir bildirim olarak göstermek için.
+      timer: 3000 // Uyarının ne kadar süreyle görüneceğini belirleyin (ms cinsinden).
+    });
+  }
   
 }

@@ -1,4 +1,4 @@
-<p-dialog header="Share" [(visible)]="display" [modal]="false" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}">
+<p-dialog header="Share" [(visible)]="display" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}">
     <textarea rows="5" cols="58" placeholder="Your Message" [(ngModel)]="value" (keydown.enter)="isUpdate ? updatePost() : savePost()" pInputTextarea></textarea>
     <ng-template pTemplate="footer">
             <button pButton icon="pi pi-check" (click)="isUpdate ? updatePost() : savePost()" label="Ok" class="p-button-outlined"></button>

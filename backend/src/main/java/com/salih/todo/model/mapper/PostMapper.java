@@ -16,7 +16,7 @@ public class PostMapper {
     public static PostDto mapTo(Post post){
         PostDto postDto = new PostDto();
         postDto.setId(post.getId());
-        postDto.setDescription(post.getDescription().toString());
+        postDto.setDescription(post.getDescription());
         postDto.setUpdatedAt(post.getUpdatedAt());
         postDto.setCreatedAt(post.getCreatedAt());
         return postDto;
@@ -29,13 +29,6 @@ public class PostMapper {
         post.setUpdatedAt(LocalDateTime.now());
         post.setCreatedAt(LocalDateTime.now());
         return post;
-    }
-
-    public static Post updateSubLocation(Post entity, PostDto dto){
-        entity.setId(dto.getId());
-        entity.setDescription(dto.getDescription());
-        entity.setUpdatedAt(LocalDateTime.now());
-        return entity;
     }
 
     public static List<PostDto> mapToList(List<Post> dtos){

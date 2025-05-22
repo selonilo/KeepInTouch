@@ -6,8 +6,7 @@
             style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
             <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
                 <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
-                    routerLink="/auth/login" style="cursor: pointer">Giriş
-                    yap</span>
+                    routerLink="/auth/register" style="cursor: pointer">Üye ol</span>
                 <div class="text-center mb-8">
                     <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg"
                         class="mb-8 w-16 shrink-0 mx-auto">
@@ -27,44 +26,32 @@
                         </g>
                     </svg>
                     <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Keep In Touch
-                        Hoşgeldiniz!
-                    </div>
-                    <span class="text-muted-color font-medium">Devam etmek için üye olun</span>
+                        Hoşgeldiniz!</div>
+                    <span class="text-muted-color font-medium">Devam etmek için giriş yapın</span>
                 </div>
 
                 <form #registerForm="ngForm" novalidate>
-                    <label for="name"
-                        class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Adı</label>
-                    <input pInputText id="name" name="name" type="text" placeholder="Adı"
-                        class="w-full md:w-[30rem] mb-8" [(ngModel)]="name" required />
-
-                    <label for="surname"
-                        class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Soyadı</label>
-                    <input pInputText id="surname" name="surname" type="text" placeholder="Soyadı"
-                        class="w-full md:w-[30rem] mb-8" [(ngModel)]="surname" required />
-
                     <label for="mail"
                         class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
                     <input pInputText id="mail" name="mail" type="email" placeholder="Mail adresi"
-                        class="w-full md:w-[30rem] mb-8" [(ngModel)]="mail" required email />
+                        class="w-full md:w-[30rem] mb-8" [(ngModel)]="mail" required />
 
                     <label for="password"
                         class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Şifre</label>
                     <p-password id="password1" name="password" [(ngModel)]="password" placeholder="Şifre"
                         [toggleMask]="true" styleClass="w-full md:w-[30rem] mb-8" [fluid]="true" [feedback]="false"
                         required></p-password>
-
-                    <label for="location"
-                        class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Lokasyon</label>
-                    <input pInputText id="location" name="location" type="text" placeholder="Lokasyon"
-                        class="w-full md:w-[30rem] mb-8" [(ngModel)]="location" required />
-
+                    <div class="flex items-center justify-between mt-2 mb-8 gap-8">
+                        <div class="flex items-center">
+                        </div>
+                        <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
+                            routerLink="/auth/refresh-password">Şifremi unuttum?</span>
+                    </div>
                     <div class="w-full md:w-[30rem] mb-8">
-                        <p-button label="Üye ol" styleClass="w-full" [disabled]="!registerForm.valid"
-                            (onClick)="register()"></p-button>
+                        <p-button label="Giriş Yap" styleClass="w-full" [disabled]="!registerForm.valid"
+                            (onClick)="login()"></p-button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>

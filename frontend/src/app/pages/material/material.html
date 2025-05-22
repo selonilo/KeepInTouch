@@ -1,0 +1,93 @@
+<p-toolbar styleClass="mb-6">
+    <ng-template #start>
+        <p-button label="Ekle" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
+    </ng-template>
+
+    <ng-template #end>
+        <p-button label="Dışa Aktar" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
+    </ng-template>
+</p-toolbar>
+
+<p-table
+    #dt
+    [value]="tableList"
+    [rows]="10"
+    [columns]="cols"
+    [paginator]="true"
+    [globalFilterFields]="['name', 'measurementUnit', 'price']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [(selection)]="selectedItem"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="{first} ile {last} arası toplam {totalRecords} gösteriliyor"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 20, 30]"
+    [loading]="loading"
+>
+    <ng-template #caption>
+        <div class="flex items-center justify-between">
+            <h5 class="m-0">Malzeme Tanımlama</h5>
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Ara..." />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="name" style="min-width:16rem">
+                Malzeme Adı
+                <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="measurementUnit" style="min-width: 8rem">
+                Ölçü Birimi
+                <p-sortIcon field="measurementUnit" />
+            </th>
+            <th pSortableColumn="price" style="min-width:10rem">
+                Birim Fiyatı
+                <p-sortIcon field="price" />
+            </th>
+            <th style="min-width: 12rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-material>
+        <tr>
+            <td style="min-width: 12rem">{{ material.name }}</td>
+            <td style="min-width: 16rem">{{ material.measurementUnit }}</td>
+            <td>{{ material.price | currency: '₺' }}</td>
+            <td>
+                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(material)" />
+                <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="delete(material)" />
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="formDialog" [style]="{ width: '450px' }" header="Malzeme Detayı" [modal]="true">
+    <ng-template #content>
+        <div class="flex flex-col gap-6">
+            <div>
+                <label for="name" class="block font-bold mb-3">Malzeme Adı</label>
+                <input type="text" pInputText id="name" [(ngModel)]="selectedItem.name" required autofocus fluid />
+                <small class="text-red-500" *ngIf="submitted && !selectedItem.name">Boş olamaz.</small>
+            </div>
+            <div>
+                <label for="measurementUnit" class="block font-bold mb-3">Ölçü Birimi</label>
+                <p-select [(ngModel)]="selectedItem.measurementUnit" inputId="measurementUnit" [options]="measurementUnitList" placeholder="Seçiniz" appendTo="body" fluid />
+                <small class="text-red-500" *ngIf="submitted && !selectedItem.measurementUnit">Boş olamaz.</small>
+            </div>
+            <div>
+                <label for="price" class="block font-bold mb-3">Birim Fiyatı</label>
+                <p-inputnumber min="0" [minFractionDigits]="2" [maxFractionDigits]="5" id="price" [(ngModel)]="selectedItem.price" fluid />
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button label="Vazgeç" icon="pi pi-times" text (click)="hideDialog()" />
+        <p-button label="Kaydet" icon="pi pi-check" (click)="save()" />
+    </ng-template>
+</p-dialog>
+
+<p-confirmdialog [style]="{ width: '450px' }" />
+<p-toast />

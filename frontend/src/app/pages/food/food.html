@@ -1,0 +1,133 @@
+<p-toolbar styleClass="mb-6">
+    <ng-template #start>
+        <p-button label="Ekle" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
+    </ng-template>
+
+    <ng-template #end>
+        <p-button label="Dışa Aktar" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
+    </ng-template>
+</p-toolbar>
+
+<div class="table-container">
+    <p-table
+        #dt
+        [value]="tableList"
+        [rows]="10"
+        [columns]="cols"
+        [paginator]="true"
+        [globalFilterFields]="['name', 'measurementUnit', 'price']"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        [(selection)]="selectedItem"
+        [rowHover]="true"
+        dataKey="id"
+        currentPageReportTemplate="{first} ile {last} arası toplam {totalRecords} gösteriliyor"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 20, 30]"
+        [loading]="loading"
+    >
+        <ng-template #caption>
+            <div class="flex items-center justify-between">
+                <h5 class="m-0">Yemek Tanımlama</h5>
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Ara..." />
+                </p-iconfield>
+            </div>
+        </ng-template>
+        <ng-template #header>
+            <tr>
+                <th pSortableColumn="name" style="min-width:16rem">
+                    Yemek Adı
+                    <p-sortIcon field="name" />
+                </th>
+                <th>Yemek Resmi</th>
+                <th style="min-width: 12rem"></th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-food>
+            <tr>
+                <td style="min-width: 12rem">{{ food.name }}</td>
+                <td>
+                    <img *ngIf="food.imageUrl" [src]="filePath + food.imageUrl" [alt]="food.name" style="width: 64px"
+                         class="rounded" />
+                </td>
+                <td>
+                    <p-button icon="pi pi-search" class="mr-2" severity="info" [rounded]="true" [outlined]="true"
+                              (click)="openDetail(food)" />
+                    <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+                              (click)="edit(food)" />
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                              (click)="delete(food)" />
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="formDialog" [style]="{ width: '450px' }" header="Yemek Detayı" [modal]="true">
+    <ng-template #content>
+        <div class="flex flex-col gap-6">
+            <div>
+                <label for="name" class="block font-bold mb-3">Yemek Adı</label>
+                <input type="text" pInputText id="name" [(ngModel)]="selectedItem.name" required autofocus fluid />
+                <small class="text-red-500" *ngIf="submitted && !selectedItem.name">Boş olamaz.</small>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button label="Vazgeç" icon="pi pi-times" text (click)="hideDialog()" />
+        <p-button label="Kaydet" icon="pi pi-check" (click)="save()" />
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="detailDialog" header="Yemek Detayı" [modal]="true" (onHide)="hideDetailDialog()" maximizable>
+    <ng-template #content>
+        <div class="flex flex-wrap gap-4 p-3">
+            <p-card class="flex-1">
+                <div class="p-3">
+                    <label for="name" class="block font-bold mb-2">Yemek Adı</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="selectedItem.name" required autofocus
+                           class="w-full mb-3" disabled />
+                    <div *ngIf="selectedItem.imageUrl" style="margin-bottom: 2rem">
+                        <img style="max-height: 300px; max-width: 300px; border-radius: 8px;"
+                             [src]="filePath + selectedItem.imageUrl" [alt]="selectedItem.imageUrl"
+                             class="block m-auto pb-4" />
+                        <div class="flex align-items-center gap-2"
+                             style="align-items: center; justify-content: center;">
+                            <p-fileupload mode="basic" name="demo[]" chooseIcon="pi pi-upload"
+                                          url="https://www.primefaces.org/cdn/api/upload.php"
+                                          accept="image/*" maxFileSize="1000000"
+                                          (onUpload)="onUpload($event)" [auto]="true" chooseLabel="Resim Düzenle" />
+
+                            <button *ngIf="selectedItem.imageUrl" (click)="onDeleteImage()"
+                                    class="p-button p-button-danger">
+                                Sil
+                            </button>
+                        </div>
+
+                    </div>
+                    <div *ngIf="!selectedItem.imageUrl" class="card flex justify-center">
+                        <p-fileupload mode="basic" name="demo[]" chooseIcon="pi pi-upload"
+                                      url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*"
+                                      maxFileSize="1000000" (onUpload)="onUpload($event)" [auto]="true"
+                                      chooseLabel="Resim Ekle" />
+                    </div>
+                </div>
+            </p-card>
+
+            <p-card class="flex-1">
+                <div class="p-3">
+                    <app-food-material [foodId]="this.selectedItem.id"></app-food-material>
+                </div>
+            </p-card>
+        </div>
+
+    </ng-template>
+
+    <ng-template #footer>
+    </ng-template>
+</p-dialog>
+
+<p-confirmdialog [style]="{ width: '450px' }" />
+<p-toast />

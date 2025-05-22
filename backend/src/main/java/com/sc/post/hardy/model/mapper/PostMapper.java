@@ -1,0 +1,48 @@
+package com.sc.post.hardy.model.mapper;
+
+import com.sc.post.hardy.model.dto.post.PostModel;
+import com.sc.post.hardy.model.entity.PostEntity;
+
+import java.util.List;
+
+public class PostMapper {
+
+    public static PostModel mapTo(PostEntity postEntity) {
+        PostModel postModel = new PostModel();
+        postModel.setId(postEntity.getId());
+        postModel.setUpdatedDate(postEntity.getUpdatedDate());
+        postModel.setCreatedDate(postEntity.getCreatedDate());
+        postModel.setUpdatedBy(postEntity.getUpdatedBy());
+        postModel.setCreatedBy(postEntity.getCreatedBy());
+        postModel.setTitle(postEntity.getTitle());
+        postModel.setContent(postEntity.getContent());
+        postModel.setUserId(postEntity.getUserId());
+        postModel.setViewNumber(postEntity.getViewNumber());
+        postModel.setLikeNumber(postEntity.getLikeNumber());
+        postModel.setPostType(postEntity.getPostType());
+        return postModel;
+    }
+
+    public static PostEntity mapTo(PostModel postModel) {
+        PostEntity postEntity = new PostEntity();
+        postEntity.setId(postModel.getId());
+        postEntity.setUpdatedDate(postModel.getUpdatedDate());
+        postEntity.setCreatedDate(postModel.getCreatedDate());
+        postEntity.setUpdatedBy(postModel.getUpdatedBy());
+        postEntity.setCreatedBy(postModel.getCreatedBy());
+        postEntity.setTitle(postModel.getTitle());
+        postEntity.setContent(postModel.getContent());
+        postEntity.setUserId(postModel.getUserId());
+        postEntity.setViewNumber(postModel.getViewNumber());
+        postEntity.setLikeNumber(postModel.getLikeNumber());
+        postEntity.setPostType(postModel.getPostType());
+        return postEntity;
+    }
+
+    public static List<PostModel> mapToList(List<PostEntity> entities) {
+        if (entities == null) {
+            return null;
+        }
+        return entities.stream().map(PostMapper::mapTo).toList();
+    }
+}

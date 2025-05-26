@@ -16,6 +16,10 @@ export class AuthService {
 
     constructor(private http: HttpClient) {}
 
+    getById(id: number): Observable<UserModel> {
+        return this.http.get<UserModel>(this.apiUrl + '/get/' + id);
+    }
+
     refreshPassword(passwordRefreshModel: PasswordRefreshModel): Observable<ResponseMessageModel> {
         return this.http.post<ResponseMessageModel>(this.apiUrl + '/refreshPassword', passwordRefreshModel);
     }
@@ -25,7 +29,7 @@ export class AuthService {
     }
 
     update(userModel: UserModel): Observable<UserModel> {
-        return this.http.post<UserModel>(this.apiUrl + '/update', userModel);
+        return this.http.put<UserModel>(this.apiUrl + '/update', userModel);
     }
 
     register(userModel: UserModel): Observable<UserModel> {

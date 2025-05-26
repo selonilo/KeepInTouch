@@ -7,6 +7,7 @@ import com.sc.post.hardy.model.dto.user.TokenModel;
 import com.sc.post.hardy.model.dto.user.UserModel;
 
 public interface AuthService {
+    UserModel getById(Long id);
     UserModel register(UserModel userModel);
     UserModel updateUser(UserModel userModel);
     TokenModel login(LoginModel loginModel);

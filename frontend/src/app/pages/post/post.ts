@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -18,13 +18,13 @@ import { TagModule } from 'primeng/tag';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { MaterialService } from '../service/material.service';
-import { FoodModel } from './model/food.model';
-import { FoodService } from '../service/food.service';
-import { CardModule } from 'primeng/card';
-import { FileUpload, UploadEvent } from 'primeng/fileupload';
-import { PROJECT_CONSTANTS } from '../constant/project.constants';
-import { FoodMaterial } from './food-material/food-material';
+import { MaterialService } from '../service/post.service';
+import { EnumPostType } from '../enum/enum.post.type';
+import { PostModel } from './model/post.model';
+import { PostQueryModel } from './model/post.query.model';
+import { DataViewModule } from 'primeng/dataview';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { ChipModule } from 'primeng/chip';
 
 interface Column {
     field: string;
@@ -38,7 +38,7 @@ interface ExportColumn {
 }
 
 @Component({
-    selector: 'app-material',
+    selector: 'app-post',
     standalone: true,
     imports: [
         CommonModule,
@@ -59,18 +59,24 @@ interface ExportColumn {
         InputIconModule,
         IconFieldModule,
         ConfirmDialogModule,
-        CardModule,
-        FileUpload,
-        FoodMaterial
+        DataViewModule,
+        SelectButtonModule,
+        ChipModule
     ],
-    templateUrl: 'food.html',
+    templateUrl: 'post.html',
     providers: [MessageService, MaterialService, ConfirmationService]
 })
-export class Food implements OnInit {
+export class Post implements OnInit {
+    @Input() isProfilePage: boolean = false;
+
     formDialog: boolean = false;
-    detailDialog: boolean = false;
 
     submitted: boolean = false;
+
+    postTypeList = Object.keys(EnumPostType).map((key) => ({
+        label: EnumPostType[key as keyof typeof EnumPostType],
+        value: key
+    }));
 
     @ViewChild('dt') dt!: Table;
 
@@ -78,40 +84,64 @@ export class Food implements OnInit {
 
     cols!: Column[];
 
-    tableList: FoodModel[] = [];
+    tableList: PostModel[] = [];
 
-    selectedItem!: FoodModel;
+    selectedItem!: PostModel;
 
     loading: boolean = false;
 
-    filePath: string = PROJECT_CONSTANTS.FILE_PATH;
+    totalRecords: number = 0;
+
+    pageSize: number = 10;
+
+    currentPage: number = 0;
+
+    layout: 'list' | 'grid' = 'list';
+
+    options = ['list', 'grid'];
+
+    userId?: number;
 
     constructor(
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
-        private service: FoodService,
-        private materialService: MaterialService
-    ) {}
+        private service: MaterialService
+    ) { }
 
     exportCSV() {
         this.dt.exportCSV();
     }
 
     ngOnInit() {
-        this.getList();
+        this.findPostWithPagination();
+        this.userId = Number(localStorage.getItem('userId'));
     }
 
-    getList() {
+    findPostWithPagination(page: number = 0, size: number = 10) {
         this.loading = true;
-        this.service.getList().subscribe({
-            next: (data) => {
-                this.tableList = data;
-                this.loading = false;
-            },
-            error: (err) => {
-                console.log(err);
-            }
-        });
+        const queryModel: PostQueryModel = {};
+        if (this.isProfilePage) {
+            this.service.getListByUserId(Number(localStorage.getItem('userId'))).subscribe({
+                next: (data) => {
+                    this.tableList = data;         
+                    this.loading = false;
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+        } else {
+            this.service.getList().subscribe({
+                next: (data) => {
+                    this.tableList = data;       
+                    this.loading = false;
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+        }
+
     }
 
     onGlobalFilter(table: Table, event: Event) {
@@ -119,19 +149,14 @@ export class Food implements OnInit {
     }
 
     openNew() {
-        this.selectedItem = <FoodModel>{};
+        this.selectedItem = <PostModel>{};
         this.submitted = false;
         this.formDialog = true;
     }
 
-    edit(selectedItem: FoodModel) {
+    edit(selectedItem: PostModel) {
         this.selectedItem = { ...selectedItem };
         this.formDialog = true;
-    }
-
-    openDetail(selectedItem: FoodModel) {
-        this.selectedItem = { ...selectedItem };
-        this.detailDialog = true;
     }
 
     hideDialog() {
@@ -139,26 +164,22 @@ export class Food implements OnInit {
         this.submitted = false;
     }
 
-    hideDetailDialog() {
-        this.detailDialog = false;
-    }
-
-    delete(selectedItem: FoodModel) {
+    delete(selectedItem: PostModel) {
         this.confirmationService.confirm({
-            message: selectedItem.name + ' silmek istediğinize emin misiniz' + '?',
+            message: selectedItem.title + ' silmek istediğinize emin misiniz' + '?',
             header: 'Onaylama',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.service.deleteById(selectedItem.id).subscribe({
                     next: (data) => {
-                        this.selectedItem = <FoodModel>{};
+                        this.selectedItem = <PostModel>{};
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Başarılı',
                             detail: 'Seçili ürün silindi',
                             life: 3000
                         });
-                        this.getList();
+                        this.findPostWithPagination();
                     },
                     error: (err) => {
                         console.log(err);
@@ -170,7 +191,8 @@ export class Food implements OnInit {
 
     save() {
         this.submitted = true;
-        if (this.selectedItem.name?.trim()) {
+        if (this.selectedItem.title?.trim()) {
+            this.selectedItem.userId = Number(localStorage.getItem('userId'));
             if (this.selectedItem.id) {
                 this.service.save(this.selectedItem).subscribe({
                     next: (data) => {
@@ -180,7 +202,7 @@ export class Food implements OnInit {
                             detail: 'Seçili ürün güncellendi',
                             life: 3000
                         });
-                        this.getList();
+                        this.findPostWithPagination();
                     },
                     error: (err) => {
                         console.log(err);
@@ -195,7 +217,7 @@ export class Food implements OnInit {
                             detail: 'Kaydedildi',
                             life: 3000
                         });
-                        this.getList();
+                        this.findPostWithPagination();
                     },
                     error: (err) => {
                         console.log(err);
@@ -204,44 +226,16 @@ export class Food implements OnInit {
             }
 
             this.formDialog = false;
-            this.selectedItem = <FoodModel>{};
+            this.selectedItem = <PostModel>{};
         }
     }
 
-    onUpload(event: any) {
-        const file: File = event.files[0];
-        if (file) {
-            this.service.uploadImage(this.selectedItem.id, file).subscribe({
-                next: (response) => {
-                    this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Resim Yüklendi.' });
-                    this.selectedItem.imageUrl = response.imageUrl;
-                    this.tableList.forEach((item) => {
-                        if (item.id === this.selectedItem.id) {
-                            item.imageUrl = response.imageUrl;
-                        }
-                    });
-                },
-                error: () => {
-                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resim Yüklenirken Hata Oluştu.' });
-                }
-            });
+    getSeverity(post: PostModel) {
+        switch (post.postType) {
+            case EnumPostType.CEVRE:
+                return 'success';
+            default:
+                return 'info';
         }
-    }
-
-    onDeleteImage() {
-        this.service.deleteImage(this.selectedItem.id).subscribe({
-            next: () => {
-                this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Resim Silindi.' });
-                this.selectedItem.imageUrl = '';
-                this.tableList.forEach((item) => {
-                    if (item.id === this.selectedItem.id) {
-                        item.imageUrl = '';
-                    }
-                });
-            },
-            error: () => {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resim Silinirken Hata Oluştu.' });
-            }
-        });
     }
 }

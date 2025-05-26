@@ -44,6 +44,15 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     SpringTemplateEngine templateEngine;
 
+    public UserModel getById(Long id) {
+        var optUser = userRepository.findById(id);
+        if (optUser.isPresent()) {
+            return UserMapper.mapTo(optUser.get());
+        } else {
+            throw new NotFoundException(id.toString());
+        }
+    }
+
     public UserModel register(UserModel userModel) {
         var optUser = userRepository.findByMail(userModel.getMail());
         if (optUser.isPresent()) {
@@ -55,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public UserModel updateUser(UserModel userModel) {
-        var optUser = userRepository.findByMail(userModel.getMail());
+        var optUser = userRepository.findById(userModel.getId());
         if (optUser.isPresent()) {
             var user = optUser.get();
             user.setPassword(passwordEncoder.encode(userModel.getPassword()));

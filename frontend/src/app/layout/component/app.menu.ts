@@ -22,42 +22,17 @@ export class AppMenu {
         this.model = [
             {
                 label: 'Home',
-                items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
+                items: [{ label: 'Ana Sayfa', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
             },
             {
                 label: 'Pages',
                 icon: 'pi pi-fw pi-briefcase',
                 routerLink: ['/pages'],
                 items: [
-                    // {
-                    //     label: 'Malzeme',
-                    //     icon: 'pi pi-fw pi-shopping-cart',
-                    //     routerLink: ['/pages/material']
-                    // },
-                    // {
-                    //     label: 'Yemek',
-                    //     icon: 'pi pi-fw pi-shopping-cart',
-                    //     routerLink: ['/pages/food']
-                    // },
                     {
-                        label: 'Giriş Yap',
-                        icon: 'pi pi-fw pi-shopping-cart',
-                        routerLink: ['/auth/login']
-                    },
-                    {
-                        label: 'Yetkisiz Giriş',
-                        icon: 'pi pi-fw pi-shopping-cart',
-                        routerLink: ['/auth/access']
-                    },
-                    {
-                        label: 'Üye Ol',
-                        icon: 'pi pi-fw pi-shopping-cart',
-                        routerLink: ['/auth/register']
-                    },
-                    {
-                        label: 'Şifre Yenile',
-                        icon: 'pi pi-fw pi-shopping-cart',
-                        routerLink: ['/auth/refresh-password']
+                        label: 'Forum',
+                        icon: 'pi pi-list',
+                        routerLink: ['/pages/post']
                     }
                 ]
             }

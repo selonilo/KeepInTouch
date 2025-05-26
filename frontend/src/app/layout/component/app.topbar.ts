@@ -91,7 +91,7 @@ export class AppTopbar implements OnInit {
                         label: 'Profil',
                         icon: 'pi pi-user',
                         command: () => {
-                            
+                            this.router.navigate(['/pages/profile']);
                         }
                     },
                     {

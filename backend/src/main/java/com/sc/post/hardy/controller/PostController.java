@@ -3,11 +3,14 @@ package com.sc.post.hardy.controller;
 import com.sc.post.hardy.model.dto.post.PostModel;
 import com.sc.post.hardy.model.dto.post.PostQueryModel;
 import com.sc.post.hardy.service.PostService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/post")
@@ -39,6 +42,16 @@ public class PostController {
     @PutMapping("/unLike/{id}")
     public ResponseEntity<PostModel> unLikePost(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(postService.unLikePost(id));
+    }
+
+    @GetMapping("/getList")
+    public ResponseEntity<List<PostModel>> getList() {
+        return ResponseEntity.ok(postService.getList());
+    }
+
+    @GetMapping("/getListByUserId/{userId}")
+    public ResponseEntity<List<PostModel>> getListByUserId(@PathVariable(name = "userId") @NotNull Long userId) {
+        return ResponseEntity.ok(postService.getListByUserId(userId));
     }
 
     @PostMapping("/queryPage")

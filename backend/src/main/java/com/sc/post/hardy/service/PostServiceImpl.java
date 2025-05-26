@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -61,8 +63,18 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    public List<PostModel> getList() {
+        List<PostEntity> postList = postRepository.findAll();
+        return PostMapper.mapToList(postList);
+    }
+
+    public List<PostModel> getListByUserId(Long id) {
+        List<PostEntity> postList = postRepository.findAllByUserId(id);
+        return PostMapper.mapToList(postList);
+    }
+
     public Page<PostModel> findPostWithPagination(Pageable pageable, PostQueryModel queryModel) {
-        Page<PostEntity> person = postRepository.findAllPost(queryModel.getTitle(), queryModel.getPostType(), pageable);
-        return person.map(PostMapper::mapTo);
+        Page<PostEntity> post = postRepository.findAllPost(queryModel.getTitle(), queryModel.getPostType(), pageable);
+        return post.map(PostMapper::mapTo);
     }
 }

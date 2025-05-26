@@ -32,4 +32,7 @@ public class PostEntity extends BaseEntity {
 
     @Column(name = "POST_TYPE")
     private EnumPostType postType;
+
+    @Column(name = "IMAGE_URL")
+    private String imageUrl;
 }

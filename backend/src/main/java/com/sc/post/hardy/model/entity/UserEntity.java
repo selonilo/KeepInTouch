@@ -16,18 +16,21 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "USER_ENTITY")
 public class UserEntity extends BaseEntity {
-    @Column(name = "name",length = 60)
+    @Column(name = "NAME",length = 60)
     private String name;
 
-    @Column(name = "surname",length = 60)
+    @Column(name = "SURNAME",length = 60)
     private String surname;
 
-    @Column(name = "mail",length = 60,unique = true)
+    @Column(name = "MAIL",length = 60,unique = true)
     private String mail;
 
-    @Column(name = "password",length = 60)
+    @Column(name = "PASSWORD",length = 60)
     private String password;
 
-    @Column(name = "location",length = 60)
+    @Column(name = "LOCATION",length = 60)
     private String location;
+
+    @Column(name = "IMAGE_URL")
+    private String imageUrl;
 }

@@ -1,4 +1,4 @@
 export const PROJECT_CONSTANTS = {
-    API_URL: 'http://192.168.1.9:8080/',
-    FILE_PATH: 'http://192.168.1.9:8080',
+    API_URL: 'http://localhost:8080/',
+    FILE_PATH: 'http://localhost:8080',
 };

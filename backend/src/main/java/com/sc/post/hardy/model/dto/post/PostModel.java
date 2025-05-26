@@ -26,4 +26,5 @@ public class PostModel extends BaseModel {
     private Long likeNumber = 0L;
     @NotBlank
     private EnumPostType postType;
+    private String imageUrl;
 }

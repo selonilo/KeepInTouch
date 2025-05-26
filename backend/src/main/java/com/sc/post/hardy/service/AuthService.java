@@ -5,6 +5,7 @@ import com.sc.post.hardy.model.dto.user.LoginModel;
 import com.sc.post.hardy.model.dto.user.PasswordRefreshModel;
 import com.sc.post.hardy.model.dto.user.TokenModel;
 import com.sc.post.hardy.model.dto.user.UserModel;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AuthService {
     UserModel getById(Long id);
@@ -12,4 +13,7 @@ public interface AuthService {
     UserModel updateUser(UserModel userModel);
     TokenModel login(LoginModel loginModel);
     ResponseMessageModel refreshPassword(PasswordRefreshModel passwordRefreshModel);
+    String uploadUserImage(Long foodId, MultipartFile file);
+    void deleteUserImage(Long foodId);
+    String getImage(Long foodId);
 }

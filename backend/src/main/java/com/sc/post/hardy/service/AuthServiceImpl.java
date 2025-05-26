@@ -22,13 +22,20 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+    @Value("${upload.path}")
+    private String uploadPath;
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.";
     private static final SecureRandom RANDOM = new SecureRandom();
     @Autowired
@@ -130,6 +137,55 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return password.toString();
+    }
+
+    public String uploadUserImage(Long userId, MultipartFile file) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId.toString()));
+        try {
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path filePath = Paths.get(uploadPath, fileName);
+
+            Files.createDirectories(filePath.getParent());
+
+            Files.write(filePath, file.getBytes());
+
+            String imageUrl = "/post/uploads/" + fileName;
+            user.setImageUrl(imageUrl);
+            userRepository.save(user);
+
+            return imageUrl;
+        } catch (IOException e) {
+            throw new AnErrorOccurredException(userId.toString());
+        }
+    }
+
+    public void deleteUserImage(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(userId.toString()));
+
+        if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+            try {
+                Path filePath = Paths.get(uploadPath, user.getImageUrl().replace("/post/uploads/", ""));
+
+                Files.deleteIfExists(filePath);
+
+                user.setImageUrl(null);
+                userRepository.save(user);
+            } catch (IOException e) {
+                throw new AnErrorOccurredException(userId.toString());
+            }
+        } else {
+            throw new NotFoundException("Silinecek resim".concat(userId.toString()));
+        }
+    }
+
+    public String getImage(Long userId) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId.toString()));
+
+        if (user.getImageUrl() == null) {
+            throw new NotFoundException(userId.toString().concat("Resim"));
+        }
+        return user.getImageUrl();
     }
 
 }

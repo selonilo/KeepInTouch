@@ -19,6 +19,7 @@ public class UserMapper {
         userModel.setMail(userEntity.getMail());
         userModel.setPassword(userEntity.getPassword());
         userModel.setLocation(userEntity.getLocation());
+        userModel.setImageUrl(userEntity.getImageUrl());
         return userModel;
     }
 
@@ -34,6 +35,7 @@ public class UserMapper {
         userEntity.setMail(userModel.getMail());
         userEntity.setPassword(userModel.getPassword());
         userEntity.setLocation(userModel.getLocation());
+        userEntity.setImageUrl(userModel.getImageUrl());
         return userEntity;
     }
 

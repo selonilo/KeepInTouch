@@ -13,15 +13,19 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { Post } from "../../post/post";
+import { FileUploadModule } from 'primeng/fileupload';
+import { PROJECT_CONSTANTS } from '../../constant/project.constants';
 
 @Component({
     selector: 'app-profile',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, CardModule, Post],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, CardModule, Post, FileUploadModule],
     providers: [MessageService],
     templateUrl: 'profile.html'
 })
 export class Profile implements OnInit {
+    filePath: string = PROJECT_CONSTANTS.FILE_PATH;
+
     id?: number;
 
     mail: string = '';
@@ -34,12 +38,15 @@ export class Profile implements OnInit {
 
     password: string = '';
 
+    imageUrl: string = '';
+
     userModel: UserModel = {
         name: "",
         surname: "",
         mail: "",
         password: "",
-        location: ""
+        location: "",
+        imageUrl: ""
     }
 
     constructor(
@@ -75,6 +82,33 @@ export class Profile implements OnInit {
                 this.messageService.add({ severity: 'error', summary: 'Hata', detail: err?.error?.message });
             }
         });
+    }
 
+    onUpload(event: any) {
+        debugger;
+        const file: File = event.files[0];
+        if (file) {
+            this.service.uploadImage(this.id, file).subscribe({
+                next: (response) => {
+                    this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Resim Yüklendi.' });
+                    this.imageUrl = response.imageUrl;
+                },
+                error: () => {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resim Yüklenirken Hata Oluştu.' });
+                }
+            });
+        }
+    }
+
+    onDeleteImage() {
+        this.service.deleteImage(this.id).subscribe({
+            next: () => {
+                this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Resim Silindi.' });
+                this.imageUrl = '';
+            },
+            error: () => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resim Silinirken Hata Oluştu.' });
+            }
+        });
     }
 }

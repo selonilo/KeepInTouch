@@ -20,6 +20,7 @@ public class PostMapper {
         postModel.setViewNumber(postEntity.getViewNumber());
         postModel.setLikeNumber(postEntity.getLikeNumber());
         postModel.setPostType(postEntity.getPostType());
+        postModel.setImageUrl(postEntity.getImageUrl());
         return postModel;
     }
 
@@ -36,6 +37,7 @@ public class PostMapper {
         postEntity.setViewNumber(postModel.getViewNumber());
         postEntity.setLikeNumber(postModel.getLikeNumber());
         postEntity.setPostType(postModel.getPostType());
+        postEntity.setImageUrl(postModel.getImageUrl());
         return postEntity;
     }
 

@@ -10,6 +10,10 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -40,5 +44,31 @@ public class AuthController {
     @PostMapping("/refreshPassword")
     public ResponseEntity<ResponseMessageModel> refreshPassword(@RequestBody PasswordRefreshModel passwordRefreshModel) {
         return ResponseEntity.ok(authService.refreshPassword(passwordRefreshModel));
+    }
+
+    @PostMapping("/uploadImage/{userId}")
+    public ResponseEntity<Map<String, String>> uploadImage(
+            @PathVariable Long userId,
+            @RequestParam("file") MultipartFile file) {
+
+        String imageUrl = authService.uploadUserImage(userId, file);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("imageUrl", imageUrl);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/deleteImage/{userId}")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long userId) {
+        authService.deleteUserImage(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("getImage/{foodId}")
+    public ResponseEntity<String> getImage(@PathVariable Long foodId) {
+        String imageUrl = authService.getImage(foodId);
+        return ResponseEntity.ok(imageUrl);
     }
 }

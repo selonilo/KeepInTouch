@@ -17,4 +17,5 @@ public class UserModel extends BaseModel {
     private String mail;
     private String password;
     private String location;
+    private String imageUrl;
 }

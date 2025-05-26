@@ -5,36 +5,50 @@
                 style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
                 <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
 
+                    <div class="p-3">
+                        <div class="card flex justify-center">
+                            <p-fileupload mode="basic"
+                                          name="file"
+                                          [customUpload]="true"
+                                          (uploadHandler)="onUpload($event)"
+                                          accept="image/*"
+                                          maxFileSize="1000000"
+                                          chooseLabel="Resim Yükle" />
+
+                        </div>
+                    </div>
+
                     <form #registerForm="ngForm" novalidate>
                         <label for="name"
-                            class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Adı</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Adı</label>
                         <input pInputText id="name" name="name" type="text" placeholder="Adı"
-                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="name" required />
+                               class="w-full md:w-[30rem] mb-8" [(ngModel)]="name" required />
 
                         <label for="surname"
-                            class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Soyadı</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Soyadı</label>
                         <input pInputText id="surname" name="surname" type="text" placeholder="Soyadı"
-                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="surname" required />
+                               class="w-full md:w-[30rem] mb-8" [(ngModel)]="surname" required />
 
                         <label for="mail"
-                            class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
                         <input pInputText id="mail" name="mail" type="email" placeholder="Mail adresi"
-                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="mail" required email />
+                               class="w-full md:w-[30rem] mb-8" [(ngModel)]="mail" required email />
 
                         <label for="password"
-                            class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Şifre</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Şifre</label>
                         <p-password id="password" name="password" [(ngModel)]="password" placeholder="Şifre"
-                            [toggleMask]="true" styleClass="w-full md:w-[30rem] mb-8" [fluid]="true" [feedback]="false"
-                            required></p-password>
+                                    [toggleMask]="true" styleClass="w-full md:w-[30rem] mb-8" [fluid]="true"
+                                    [feedback]="false"
+                                    required></p-password>
 
                         <label for="location"
-                            class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Lokasyon</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Lokasyon</label>
                         <input pInputText id="location" name="location" type="text" placeholder="Lokasyon"
-                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="location" required />
+                               class="w-full md:w-[30rem] mb-8" [(ngModel)]="location" required />
 
                         <div class="w-full md:w-[30rem] mb-8">
                             <p-button label="Güncelle" styleClass="w-full" [disabled]="!registerForm.valid"
-                                (onClick)="update()"></p-button>
+                                      (onClick)="update()"></p-button>
                         </div>
                     </form>
 

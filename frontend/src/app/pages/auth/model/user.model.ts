@@ -6,4 +6,5 @@ export interface UserModel extends BaseModel {
     mail: string;
     password: string;
     location: string;
+    imageUrl: string;
 }

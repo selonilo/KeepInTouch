@@ -35,4 +35,18 @@ export class AuthService {
     register(userModel: UserModel): Observable<UserModel> {
         return this.http.post<UserModel>(this.apiUrl + '/register', userModel);
     }
+
+    uploadImage(userId: number | undefined, file: File): Observable<{ imageUrl: string }> {
+        const formData = new FormData();
+        formData.append('file', file);
+        return this.http.post<{ imageUrl: string }>(this.apiUrl + '/uploadImage/' + userId, formData);
+    }
+
+    deleteImage(userId: number | undefined): Observable<void> {
+        return this.http.delete<void>(this.apiUrl + '/deleteImage/' + userId);
+    }
+
+    getImage(userId: number): Observable<string> {
+        return this.http.get<string>(this.apiUrl + '/getImage/' + userId);
+    }
 }

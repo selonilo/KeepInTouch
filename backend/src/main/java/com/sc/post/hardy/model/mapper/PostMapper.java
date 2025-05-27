@@ -17,8 +17,6 @@ public class PostMapper {
         postModel.setTitle(postEntity.getTitle());
         postModel.setContent(postEntity.getContent());
         postModel.setUserId(postEntity.getUserId());
-        postModel.setViewNumber(postEntity.getViewNumber());
-        postModel.setLikeNumber(postEntity.getLikeNumber());
         postModel.setPostType(postEntity.getPostType());
         postModel.setImageUrl(postEntity.getImageUrl());
         return postModel;
@@ -34,8 +32,6 @@ public class PostMapper {
         postEntity.setTitle(postModel.getTitle());
         postEntity.setContent(postModel.getContent());
         postEntity.setUserId(postModel.getUserId());
-        postEntity.setViewNumber(postModel.getViewNumber());
-        postEntity.setLikeNumber(postModel.getLikeNumber());
         postEntity.setPostType(postModel.getPostType());
         postEntity.setImageUrl(postModel.getImageUrl());
         return postEntity;

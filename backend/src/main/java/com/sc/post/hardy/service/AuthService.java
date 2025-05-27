@@ -13,7 +13,7 @@ public interface AuthService {
     UserModel updateUser(UserModel userModel);
     TokenModel login(LoginModel loginModel);
     ResponseMessageModel refreshPassword(PasswordRefreshModel passwordRefreshModel);
-    String uploadUserImage(Long foodId, MultipartFile file);
-    void deleteUserImage(Long foodId);
-    String getImage(Long foodId);
+    String uploadUserImage(Long userId, MultipartFile file);
+    void deleteUserImage(Long userId);
+    String getImage(Long userId);
 }

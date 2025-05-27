@@ -15,15 +15,24 @@ import { CardModule } from 'primeng/card';
 import { Post } from "../../post/post";
 import { FileUploadModule } from 'primeng/fileupload';
 import { PROJECT_CONSTANTS } from '../../constant/project.constants';
+import { HttpHeaders } from '@angular/common/http';
+import { AvatarModule } from 'primeng/avatar';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-profile',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, CardModule, Post, FileUploadModule],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, CardModule, Post, FileUploadModule, AvatarModule, CommonModule],
     providers: [MessageService],
     templateUrl: 'profile.html'
 })
 export class Profile implements OnInit {
+    uploadHeaders = new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+    });
+
+    uploadedFiles: any[] = [];
+
     filePath: string = PROJECT_CONSTANTS.FILE_PATH;
 
     id?: number;
@@ -50,10 +59,10 @@ export class Profile implements OnInit {
     }
 
     constructor(
-            private service: AuthService,
-            private router: Router,
-            private messageService: MessageService
-        ) { }
+        private service: AuthService,
+        private router: Router,
+        private messageService: MessageService
+    ) { }
 
     ngOnInit(): void {
         this.service.getById(Number(localStorage.getItem('userId'))).subscribe({
@@ -63,6 +72,7 @@ export class Profile implements OnInit {
                 this.name = data.name;
                 this.surname = data.surname;
                 this.location = data.location;
+                this.imageUrl = data.imageUrl;
             }
         })
     }
@@ -85,7 +95,6 @@ export class Profile implements OnInit {
     }
 
     onUpload(event: any) {
-        debugger;
         const file: File = event.files[0];
         if (file) {
             this.service.uploadImage(this.id, file).subscribe({

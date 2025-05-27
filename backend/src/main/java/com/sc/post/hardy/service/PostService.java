@@ -11,9 +11,10 @@ public interface PostService {
     PostModel save(PostModel postModel);
     void delete(Long id);
     PostModel getById(Long id);
-    PostModel likePost(Long id);
-    PostModel unLikePost(Long id);
-    List<PostModel> getList();
+    void likePost(Long postId, Long userId);
+    void unLikePost(Long postId, Long userId);
+    List<PostModel> getList(Long userId);
     List<PostModel> getListByUserId(Long id);
     Page<PostModel> findPostWithPagination(Pageable pageable, PostQueryModel queryModel);
+    Boolean isLiked(Long postId, Long userId);
 }

@@ -12,4 +12,8 @@ export interface PostModel {
     viewNumber: number;
     likeNumber: number;
     postType: EnumPostType;
+    isLiked: boolean;
+    imageUrl: string;
+    userImageUrl: string;
+    name: string;
 }

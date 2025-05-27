@@ -27,4 +27,7 @@ public class PostModel extends BaseModel {
     @NotBlank
     private EnumPostType postType;
     private String imageUrl;
+    private String userImageUrl;
+    private String name;
+    private Boolean isLiked;
 }

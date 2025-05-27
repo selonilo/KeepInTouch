@@ -31,7 +31,7 @@ export class AppMenu {
                 items: [
                     {
                         label: 'Forum',
-                        icon: 'pi pi-list',
+                        icon: 'pi pi-book',
                         routerLink: ['/pages/post']
                     }
                 ]

@@ -6,11 +6,14 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 import { MenuModule } from 'primeng/menu';
+import { AvatarModule } from 'primeng/avatar';
+import { AuthService } from '../../pages/service/auth.service';
+import { PROJECT_CONSTANTS } from '../../pages/constant/project.constants';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, MenuModule],
+    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, MenuModule, AvatarModule],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -50,7 +53,8 @@ import { MenuModule } from 'primeng/menu';
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
                     <button type="button" class="layout-topbar-action" (click)="menu.toggle($event)">
-                        <i class="pi pi-user"></i>
+                        <i *ngIf="!imageUrl" class="pi pi-user"></i>
+                        <p-avatar *ngIf="imageUrl" [image]="filePath + imageUrl" size="normal" shape="circle"></p-avatar>
                         <span>Profil</span>
                     </button>
                 </div>
@@ -62,11 +66,21 @@ import { MenuModule } from 'primeng/menu';
 export class AppTopbar implements OnInit {
     items!: MenuItem[];
 
+    imageUrl: string = '';
+
+    filePath: string = PROJECT_CONSTANTS.FILE_PATH;
+
     constructor(public layoutService: LayoutService,
+        private authService: AuthService,
         private router: Router
     ) { }
 
     ngOnInit(): void {
+        this.authService.getById(Number(localStorage.getItem('userId'))).subscribe({
+            next:(data) => {
+                this.imageUrl = data.imageUrl;
+            }
+        })
         this.items = [
             {
                 label: localStorage.getItem('name')?.toString(),

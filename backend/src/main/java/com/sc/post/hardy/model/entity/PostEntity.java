@@ -24,12 +24,6 @@ public class PostEntity extends BaseEntity {
     @Column(name = "USER_ID")
     private Long userId;
 
-    @Column(name = "VIEW_NUMBER")
-    private Long viewNumber = 0L;
-
-    @Column(name = "LIKE_NUMBER")
-    private Long likeNumber = 0L;
-
     @Column(name = "POST_TYPE")
     private EnumPostType postType;
 

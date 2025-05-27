@@ -34,19 +34,19 @@ public class PostController {
         postService.delete(id);
     }
 
-    @PutMapping("/like/{id}")
-    public ResponseEntity<PostModel> likePost(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(postService.likePost(id));
+    @PutMapping("/like/{postId}/{userId}")
+    public void likePost(@PathVariable(name = "postId") @NotNull Long postId, @PathVariable(name = "userId") @NotNull Long userId) {
+        postService.likePost(postId, userId);
     }
 
-    @PutMapping("/unLike/{id}")
-    public ResponseEntity<PostModel> unLikePost(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(postService.unLikePost(id));
+    @PutMapping("/unLike/{postId}/{userId}")
+    public void unLikePost(@PathVariable(name = "postId") @NotNull Long postId, @PathVariable(name = "userId") @NotNull Long userId) {
+        postService.unLikePost(postId, userId);
     }
 
-    @GetMapping("/getList")
-    public ResponseEntity<List<PostModel>> getList() {
-        return ResponseEntity.ok(postService.getList());
+    @GetMapping("/getList/{userId}")
+    public ResponseEntity<List<PostModel>> getList(@PathVariable(name = "userId") @NotNull Long userId) {
+        return ResponseEntity.ok(postService.getList(userId));
     }
 
     @GetMapping("/getListByUserId/{userId}")
@@ -57,5 +57,10 @@ public class PostController {
     @PostMapping("/queryPage")
     public ResponseEntity<Page<PostModel>> findPostWithPagination(Pageable pageable, @RequestBody PostQueryModel queryModel) {
         return ResponseEntity.ok(postService.findPostWithPagination(pageable, queryModel));
+    }
+
+    @GetMapping("/isLiked/{postId}/{userId}")
+    public ResponseEntity<Boolean> isLiked(@PathVariable(name = "postId") @NotNull Long postId, @PathVariable(name = "userId") @NotNull Long userId) {
+        return ResponseEntity.ok(postService.isLiked(postId, userId));
     }
 }

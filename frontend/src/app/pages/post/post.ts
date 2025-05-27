@@ -18,13 +18,14 @@ import { TagModule } from 'primeng/tag';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { MaterialService } from '../service/post.service';
+import { PostService } from '../service/post.service';
 import { EnumPostType } from '../enum/enum.post.type';
 import { PostModel } from './model/post.model';
 import { PostQueryModel } from './model/post.query.model';
 import { DataViewModule } from 'primeng/dataview';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChipModule } from 'primeng/chip';
+import { PROJECT_CONSTANTS } from '../constant/project.constants';
 
 interface Column {
     field: string;
@@ -64,7 +65,7 @@ interface ExportColumn {
         ChipModule
     ],
     templateUrl: 'post.html',
-    providers: [MessageService, MaterialService, ConfirmationService]
+    providers: [MessageService, PostService, ConfirmationService]
 })
 export class Post implements OnInit {
     @Input() isProfilePage: boolean = false;
@@ -102,10 +103,14 @@ export class Post implements OnInit {
 
     userId?: number;
 
+    imageUrl: string = '';
+    
+    filePath: string = PROJECT_CONSTANTS.FILE_PATH;
+
     constructor(
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
-        private service: MaterialService
+        private service: PostService
     ) { }
 
     exportCSV() {
@@ -123,7 +128,7 @@ export class Post implements OnInit {
         if (this.isProfilePage) {
             this.service.getListByUserId(Number(localStorage.getItem('userId'))).subscribe({
                 next: (data) => {
-                    this.tableList = data;         
+                    this.tableList = data;
                     this.loading = false;
                 },
                 error: (err) => {
@@ -131,9 +136,9 @@ export class Post implements OnInit {
                 }
             });
         } else {
-            this.service.getList().subscribe({
+            this.service.getList(Number(localStorage.getItem('userId'))).subscribe({
                 next: (data) => {
-                    this.tableList = data;       
+                    this.tableList = data;
                     this.loading = false;
                 },
                 error: (err) => {
@@ -230,12 +235,37 @@ export class Post implements OnInit {
         }
     }
 
-    getSeverity(post: PostModel) {
-        switch (post.postType) {
-            case EnumPostType.CEVRE:
-                return 'success';
-            default:
-                return 'info';
-        }
+    likePost(post: PostModel) {
+        this.service.likePost(post.id, Number(localStorage.getItem('userId'))).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Başarılı',
+                    detail: 'Kaydedildi',
+                    life: 3000
+                });
+                this.findPostWithPagination();
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        });
+    }
+
+    unLikePost(post: PostModel) {
+        this.service.unLikePost(post.id, Number(localStorage.getItem('userId'))).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Başarılı',
+                    detail: 'Kaydedildi',
+                    life: 3000
+                });
+                this.findPostWithPagination();
+            },
+            error: (err) => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Message Content' });
+            }
+        });
     }
 }

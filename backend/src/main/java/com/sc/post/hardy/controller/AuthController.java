@@ -60,15 +60,14 @@ public class AuthController {
     }
 
     @DeleteMapping("/deleteImage/{userId}")
-    public ResponseEntity<Void> deleteImage(@PathVariable Long userId) {
+    public void deleteImage(@PathVariable Long userId) {
         authService.deleteUserImage(userId);
-        return ResponseEntity.noContent().build();
     }
 
 
-    @GetMapping("getImage/{foodId}")
-    public ResponseEntity<String> getImage(@PathVariable Long foodId) {
-        String imageUrl = authService.getImage(foodId);
+    @GetMapping("getImage/{userId}")
+    public ResponseEntity<String> getImage(@PathVariable Long userId) {
+        String imageUrl = authService.getImage(userId);
         return ResponseEntity.ok(imageUrl);
     }
 }

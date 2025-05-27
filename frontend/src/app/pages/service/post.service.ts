@@ -9,7 +9,7 @@ import { Page } from '../common/model/page.model';
 @Injectable({
     providedIn: 'root'
 })
-export class MaterialService {
+export class PostService {
     private apiUrl = PROJECT_CONSTANTS.API_URL + 'post';
 
     constructor(private http: HttpClient) { }
@@ -22,8 +22,8 @@ export class MaterialService {
         return this.http.delete<void>(this.apiUrl + '/delete/' + id);
     }
 
-    getList(): Observable<PostModel[]> {
-        return this.http.get<PostModel[]>(this.apiUrl + '/getList');
+    getList(userId: number): Observable<PostModel[]> {
+        return this.http.get<PostModel[]>(this.apiUrl + '/getList/' + userId);
     }
 
     getListByUserId(userId: number): Observable<PostModel[]> {
@@ -41,4 +41,17 @@ export class MaterialService {
             { params }
         );
     }
+
+    likePost(postId: number, userId: number): Observable<void> {
+        return this.http.put<void>(this.apiUrl + '/like/' + postId + '/' + userId, "");
+    }
+
+    unLikePost(postId: number, userId: number): Observable<void> {
+        return this.http.put<void>(this.apiUrl + '/unLike/' + postId + '/' + userId, "");
+    }
+
+    isLiked(postId: number, userId: number): Observable<boolean> {
+        return this.http.get<boolean>(this.apiUrl + '/isLiked/' + postId + '/' + userId);
+    }
+
 }

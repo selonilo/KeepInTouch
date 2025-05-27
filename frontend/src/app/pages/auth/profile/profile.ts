@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
-import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
 import { UserModel } from '../model/user.model';
 import { AuthService } from '../../service/auth.service';
 import { ToastModule } from 'primeng/toast';
@@ -15,7 +14,6 @@ import { CardModule } from 'primeng/card';
 import { Post } from "../../post/post";
 import { FileUploadModule } from 'primeng/fileupload';
 import { PROJECT_CONSTANTS } from '../../constant/project.constants';
-import { HttpHeaders } from '@angular/common/http';
 import { AvatarModule } from 'primeng/avatar';
 import { CommonModule } from '@angular/common';
 
@@ -24,14 +22,12 @@ import { CommonModule } from '@angular/common';
     standalone: true,
     imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, CardModule, Post, FileUploadModule, AvatarModule, CommonModule],
     providers: [MessageService],
-    templateUrl: 'profile.html'
+    templateUrl: 'profile.html',
+    styleUrls: ['profile.scss']
 })
 export class Profile implements OnInit {
-    uploadHeaders = new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-    });
 
-    uploadedFiles: any[] = [];
+    userId?: number;
 
     filePath: string = PROJECT_CONSTANTS.FILE_PATH;
 
@@ -61,20 +57,24 @@ export class Profile implements OnInit {
     constructor(
         private service: AuthService,
         private router: Router,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private route: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
-        this.service.getById(Number(localStorage.getItem('userId'))).subscribe({
-            next: (data) => {
-                this.id = data.id;
-                this.mail = data.mail;
-                this.name = data.name;
-                this.surname = data.surname;
-                this.location = data.location;
-                this.imageUrl = data.imageUrl;
-            }
-        })
+        this.route.paramMap.subscribe(params => {
+            this.userId = params.get('userId') ? Number(params.get('userId')) : Number(localStorage.getItem('userId'));
+            this.service.getById(this.userId).subscribe({
+                next: (data) => {
+                    this.id = data.id;
+                    this.mail = data.mail;
+                    this.name = data.name;
+                    this.surname = data.surname;
+                    this.location = data.location;
+                    this.imageUrl = data.imageUrl;
+                }
+            })
+        });
     }
 
     update() {

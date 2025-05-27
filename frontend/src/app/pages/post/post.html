@@ -30,8 +30,8 @@
                         <div class="pt-12">
                             <div style="margin-bottom: 2rem;">
                                 <p-chip *ngIf="item.userImageUrl" [label]="item.name"
-                                    [image]="filePath + item.userImageUrl" styleClass="m-1"></p-chip>
-                                <p-chip *ngIf="!item.userImageUrl" [label]="item.name" icon="pi pi-user"
+                                    [image]="filePath + item.userImageUrl" styleClass="m-1" (click)="routeProfile(item.userId)"></p-chip>
+                                <p-chip *ngIf="!item.userImageUrl" [label]="item.name" icon="pi pi-user" (click)="routeProfile(item.userId)"
                                     styleClass="m-1"></p-chip>
                             </div>
                             <div class="flex flex-row justify-between items-start gap-2 w-full flex-wrap">

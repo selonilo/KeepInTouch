@@ -26,6 +26,7 @@ import { DataViewModule } from 'primeng/dataview';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChipModule } from 'primeng/chip';
 import { PROJECT_CONSTANTS } from '../constant/project.constants';
+import { Router } from '@angular/router';
 
 interface Column {
     field: string;
@@ -104,13 +105,14 @@ export class Post implements OnInit {
     userId?: number;
 
     imageUrl: string = '';
-    
+
     filePath: string = PROJECT_CONSTANTS.FILE_PATH;
 
     constructor(
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
-        private service: PostService
+        private service: PostService,
+        private router: Router
     ) { }
 
     exportCSV() {
@@ -267,5 +269,9 @@ export class Post implements OnInit {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Message Content' });
             }
         });
+    }
+
+    routeProfile(userId: any) {
+        this.router.navigate(['/pages/profile', userId]);
     }
 }

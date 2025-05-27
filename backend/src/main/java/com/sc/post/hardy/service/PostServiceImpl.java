@@ -5,6 +5,7 @@ import com.sc.post.hardy.model.dto.post.PostModel;
 import com.sc.post.hardy.model.dto.post.PostQueryModel;
 import com.sc.post.hardy.model.entity.LikeEntity;
 import com.sc.post.hardy.model.entity.PostEntity;
+import com.sc.post.hardy.model.entity.ViewEntity;
 import com.sc.post.hardy.model.mapper.PostMapper;
 import com.sc.post.hardy.repository.LikeRepository;
 import com.sc.post.hardy.repository.PostRepository;
@@ -77,11 +78,18 @@ public class PostServiceImpl implements PostService {
     public List<PostModel> getList(Long userId) {
         List<PostEntity> postList = postRepository.findAll();
         List<PostModel> postModelList = PostMapper.mapToList(postList);
-        //viewRepository.findByPostIdAndUserId()
         for (var post : postModelList) {
-            var optUser = userRepository.findById(post.getUserId());
+            var optView = viewRepository.findByPostIdAndUserId(post.getId(), userId);
+            if (optView.isEmpty()) {
+                ViewEntity viewEntity = new ViewEntity();
+                viewEntity.setPostId(post.getId());
+                viewEntity.setUserId(userId);
+                viewRepository.saveAndFlush(viewEntity);
+            }
             post.setIsLiked(likeRepository.findByPostIdAndUserId(post.getId(), userId).isPresent());
             post.setLikeNumber(likeRepository.countByPostId(post.getId()));
+            post.setViewNumber(viewRepository.countByPostId(post.getId()));
+            var optUser = userRepository.findById(post.getUserId());
             optUser.ifPresent(user -> {
                 post.setUserImageUrl(user.getImageUrl());
                 post.setName(user.getName());
@@ -94,7 +102,21 @@ public class PostServiceImpl implements PostService {
         List<PostEntity> postList = postRepository.findAllByUserId(userId);
         List<PostModel> postModelList = PostMapper.mapToList(postList);
         for (var post : postModelList) {
+            var optView = viewRepository.findByPostIdAndUserId(post.getId(), userId);
+            if (optView.isEmpty()) {
+                ViewEntity viewEntity = new ViewEntity();
+                viewEntity.setPostId(post.getId());
+                viewEntity.setUserId(userId);
+                viewRepository.saveAndFlush(viewEntity);
+            }
+            post.setIsLiked(likeRepository.findByPostIdAndUserId(post.getId(), userId).isPresent());
             post.setLikeNumber(likeRepository.countByPostId(post.getId()));
+            post.setViewNumber(viewRepository.countByPostId(post.getId()));
+            var optUser = userRepository.findById(post.getUserId());
+            optUser.ifPresent(user -> {
+                post.setUserImageUrl(user.getImageUrl());
+                post.setName(user.getName());
+            });
         }
         return postModelList;
     }

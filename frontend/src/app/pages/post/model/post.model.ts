@@ -1,4 +1,5 @@
 import { EnumPostType } from "../../enum/enum.post.type";
+import { CommentModel } from "./comment.model";
 
 export interface PostModel {
     id: number;
@@ -17,4 +18,7 @@ export interface PostModel {
     userImageUrl: string;
     name: string;
     isFollowed: boolean;
+    commentModelList: CommentModel[];
+    showCommentInput: boolean;
+    showComment: boolean;
 }

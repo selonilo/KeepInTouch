@@ -7,6 +7,8 @@ import com.sc.post.hardy.model.dto.user.TokenModel;
 import com.sc.post.hardy.model.dto.user.UserModel;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface AuthService {
     UserModel getById(Long id);
     UserModel register(UserModel userModel);
@@ -18,4 +20,6 @@ public interface AuthService {
     String getImage(Long userId);
     void followUser(Long followUserId, Long followerUserId);
     void unFollowUser(Long followUserId, Long followerUserId);
+    List<UserModel> getFollowListByUserId(Long userId);
+    List<UserModel> getFollowerListByUserId(Long userId);
 }

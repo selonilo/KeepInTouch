@@ -1,5 +1,7 @@
 package com.sc.post.hardy.service;
 
+import com.sc.post.hardy.model.dto.TotalStatsModel;
+import com.sc.post.hardy.model.dto.post.CommentModel;
 import com.sc.post.hardy.model.dto.post.PostModel;
 import com.sc.post.hardy.model.dto.post.PostQueryModel;
 import org.springframework.data.domain.Page;
@@ -21,4 +23,6 @@ public interface PostService {
     Boolean isLiked(Long postId, Long userId);
     String uploadImage(Long postId, MultipartFile file);
     void deleteImage(Long postId);
+    TotalStatsModel getTotalStats();
+    void commentPost(CommentModel commentModel);
 }

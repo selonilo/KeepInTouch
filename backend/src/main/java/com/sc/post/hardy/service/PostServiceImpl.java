@@ -2,12 +2,17 @@ package com.sc.post.hardy.service;
 
 import com.sc.post.hardy.exception.AnErrorOccurredException;
 import com.sc.post.hardy.exception.NotFoundException;
+import com.sc.post.hardy.model.dto.TotalStatsModel;
+import com.sc.post.hardy.model.dto.post.CommentModel;
 import com.sc.post.hardy.model.dto.post.PostModel;
 import com.sc.post.hardy.model.dto.post.PostQueryModel;
+import com.sc.post.hardy.model.dto.user.UserModel;
+import com.sc.post.hardy.model.entity.CommentEntity;
 import com.sc.post.hardy.model.entity.LikeEntity;
 import com.sc.post.hardy.model.entity.PostEntity;
 import com.sc.post.hardy.model.entity.ViewEntity;
 import com.sc.post.hardy.model.mapper.PostMapper;
+import com.sc.post.hardy.model.mapper.UserMapper;
 import com.sc.post.hardy.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +25,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -36,6 +43,8 @@ public class PostServiceImpl implements PostService {
     private ViewRepository viewRepository;
     @Autowired
     private FollowRepository followRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     public PostModel save(PostModel postModel) {
         return PostMapper.mapTo(postRepository.saveAndFlush(PostMapper.mapTo(postModel)));
@@ -99,7 +108,21 @@ public class PostServiceImpl implements PostService {
                 post.setUserImageUrl(user.getImageUrl());
                 post.setName(user.getName());
             });
+            var commentList = commentRepository.findAllByPostId(post.getId());
+            List<CommentModel> commentModelList = new ArrayList<>();
+            for (var comment : commentList) {
+                CommentModel commentModel = new CommentModel();
+                commentModel.setPostId(comment.getPostId());
+                commentModel.setUserId(comment.getUserId());
+                commentModel.setComment(comment.getComment());
+                var optCommentUser = userRepository.findById(comment.getUserId());
+                optCommentUser.ifPresent(userEntity -> commentModel.setUserModel(UserMapper.mapTo(userEntity)));
+                commentModelList.add(commentModel);
+            }
+            post.setCommentModelList(commentModelList);
         }
+        postModelList = new ArrayList<>(postModelList);
+        postModelList.sort(Comparator.comparing(PostModel::getUserId));
         return postModelList;
     }
 
@@ -122,7 +145,21 @@ public class PostServiceImpl implements PostService {
                 post.setUserImageUrl(user.getImageUrl());
                 post.setName(user.getName());
             });
+            var commentList = commentRepository.findAllByPostId(post.getId());
+            List<CommentModel> commentModelList = new ArrayList<>();
+            for (var comment : commentList) {
+                CommentModel commentModel = new CommentModel();
+                commentModel.setPostId(comment.getPostId());
+                commentModel.setUserId(comment.getUserId());
+                commentModel.setComment(comment.getComment());
+                var optCommentUser = userRepository.findById(comment.getUserId());
+                optCommentUser.ifPresent(userEntity -> commentModel.setUserModel(UserMapper.mapTo(userEntity)));
+                commentModelList.add(commentModel);
+            }
+            post.setCommentModelList(commentModelList);
         }
+        postModelList = new ArrayList<>(postModelList);
+        postModelList.sort(Comparator.comparing(PostModel::getUserId));
         return postModelList;
     }
 
@@ -145,7 +182,21 @@ public class PostServiceImpl implements PostService {
                 post.setUserImageUrl(user.getImageUrl());
                 post.setName(user.getName());
             });
+            var commentList = commentRepository.findAllByPostId(post.getId());
+            List<CommentModel> commentModelList = new ArrayList<>();
+            for (var comment : commentList) {
+                CommentModel commentModel = new CommentModel();
+                commentModel.setPostId(comment.getPostId());
+                commentModel.setUserId(comment.getUserId());
+                commentModel.setComment(comment.getComment());
+                var optCommentUser = userRepository.findById(comment.getUserId());
+                optCommentUser.ifPresent(userEntity -> commentModel.setUserModel(UserMapper.mapTo(userEntity)));
+                commentModelList.add(commentModel);
+            }
+            post.setCommentModelList(commentModelList);
         }
+        postModelList = new ArrayList<>(postModelList);
+        postModelList.sort(Comparator.comparing(PostModel::getUserId));
         return postModelList;
     }
 
@@ -195,6 +246,30 @@ public class PostServiceImpl implements PostService {
             }
         } else {
             throw new NotFoundException("Silinecek resim".concat(postId.toString()));
+        }
+    }
+
+    public TotalStatsModel getTotalStats() {
+        TotalStatsModel totalStatsModel = new TotalStatsModel();
+        totalStatsModel.setTotalPostCount(postRepository.count());
+        totalStatsModel.setTotalLikeCount(likeRepository.count());
+        totalStatsModel.setTotalUserCount(userRepository.count());
+        totalStatsModel.setTotalCommentCount(commentRepository.count());
+        totalStatsModel.setTotalCommentCount(0L);
+        return totalStatsModel;
+    }
+
+    public void commentPost(CommentModel commentModel) {
+        var optPost = postRepository.findById(commentModel.getPostId());
+        var optUser = userRepository.findById(commentModel.getUserId());
+        if (optPost.isPresent() && optUser.isPresent()) {
+            CommentEntity commentEntity = new CommentEntity();
+            commentEntity.setUserId(commentModel.getUserId());
+            commentEntity.setPostId(commentModel.getPostId());
+            commentEntity.setComment(commentModel.getComment());
+            commentRepository.saveAndFlush(commentEntity);
+        } else {
+            throw new NotFoundException(commentModel.getPostId().toString().concat(commentModel.getUserId().toString()));
         }
     }
 }

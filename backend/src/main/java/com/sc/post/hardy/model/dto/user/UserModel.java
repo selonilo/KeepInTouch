@@ -21,4 +21,5 @@ public class UserModel extends BaseModel {
     private Long postCount;
     private Long followCount;
     private Long followerCount;
+    private Long commentCount;
 }

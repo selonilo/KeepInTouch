@@ -23,7 +23,8 @@
                             <div class="relative mx-auto">
                                 <img *ngIf="item.imageUrl" class="rounded w-full" [src]="filePath + item.imageUrl"
                                     style="max-width: 275px" />
-                                <i *ngIf="!item.imageUrl" class="rounded w-full pi pi-image" style="font-size: 15rem"></i>
+                                <i *ngIf="!item.imageUrl" class="rounded w-full pi pi-image"
+                                    style="font-size: 15rem"></i>
                             </div>
                         </div>
                         <div class="pt-12">
@@ -75,7 +76,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-col gap-6 mt-6">
+                            <div class="flex flex-col gap-6 mt-6 mb-5">
                                 <div class="flex gap-2">
                                     <p-button *ngIf="!item.isLiked" icon="pi pi-heart" styleClass="h-full"
                                         [outlined]="true" (onClick)="likePost(item)"></p-button>
@@ -83,10 +84,43 @@
                                         [outlined]="true" (onClick)="unLikePost(item)"></p-button>
                                     <p-button *ngIf="userId === item.userId" icon="pi pi-pencil" [rounded]="true"
                                         [outlined]="true" (click)="edit(item)"></p-button>
+                                    <p-button icon="pi pi-comment" [rounded]="true" [outlined]="true"
+                                        (click)="openCommentInput(item)"></p-button>
                                     <p-button *ngIf="userId === item.userId" icon="pi pi-trash" severity="danger"
                                         [rounded]="true" [outlined]="true" (click)="delete(item)" />
                                 </div>
                             </div>
+                            <div *ngIf="item.showCommentInput" class="mt-2">
+                                <label for="title" class="block font-bold mb-3">Yorum Yaz</label>
+
+                                <div class="flex items-center gap-2">
+                                    <input type="text" pInputText id="title" [(ngModel)]="comment" required autofocus
+                                        class="flex-1" />
+                                    <p-button icon="pi pi-save" styleClass="h-full" [outlined]="true"
+                                        (onClick)="commentPost(item)"></p-button>
+                                </div>
+                            </div>
+                            <span *ngIf="item.commentModelList.length > 0" style="cursor: pointer;"
+                                class="text-primary font-bold hover:underline" (click)="showComment(item)">Yorumlar
+                                {{item.commentModelList.length}}</span>
+                            <p-accordion *ngIf="item.showComment">
+                                <p-accordion-panel *ngFor="let comment of item.commentModelList; let i = index"
+                                    [value]="i">
+                                    <p-accordion-header>
+                                        <p-chip *ngIf="comment.userModel.imageUrl" [label]="item.name"
+                                            class="chip-pointer" [image]="filePath + comment.userModel.imageUrl"
+                                            styleClass="m-0">
+                                        </p-chip>
+
+                                        <p-chip *ngIf="!comment.userModel.imageUrl" [label]="item.name"
+                                            class="chip-pointer" icon="pi pi-user" styleClass="m-0">
+                                        </p-chip>
+                                    </p-accordion-header>
+                                    <p-accordion-content>
+                                        <p class="m-0">{{ comment.comment }}</p>
+                                    </p-accordion-content>
+                                </p-accordion-panel>
+                            </p-accordion>
                         </div>
                     </div>
                 </div>
@@ -102,7 +136,8 @@
                 <div class="card">
                     <div class="font-semibold text-xl mb-4">Resim</div>
                     <p-fileUpload #uploader name="file" [customUpload]="true" (uploadHandler)="onUpload($event)"
-                        accept="image/*" maxFileSize="1000000" chooseLabel="Dosya Seç" cancelLabel="İptal" uploadLabel="Yükle">
+                        accept="image/*" maxFileSize="1000000" chooseLabel="Dosya Seç" cancelLabel="İptal"
+                        uploadLabel="Yükle">
                     </p-fileUpload>
                 </div>
             </div>

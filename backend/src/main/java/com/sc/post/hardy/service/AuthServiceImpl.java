@@ -7,6 +7,7 @@ import com.sc.post.hardy.exception.MailOrPasswordIncorrectException;
 import com.sc.post.hardy.exception.NotFoundException;
 import com.sc.post.hardy.model.data.PostHardyConstant;
 import com.sc.post.hardy.model.dto.ResponseMessageModel;
+import com.sc.post.hardy.model.dto.TotalStatsModel;
 import com.sc.post.hardy.model.dto.user.LoginModel;
 import com.sc.post.hardy.model.dto.user.PasswordRefreshModel;
 import com.sc.post.hardy.model.dto.user.TokenModel;
@@ -15,6 +16,7 @@ import com.sc.post.hardy.model.entity.FollowEntity;
 import com.sc.post.hardy.model.entity.LikeEntity;
 import com.sc.post.hardy.model.entity.UserEntity;
 import com.sc.post.hardy.model.mapper.UserMapper;
+import com.sc.post.hardy.repository.CommentRepository;
 import com.sc.post.hardy.repository.FollowRepository;
 import com.sc.post.hardy.repository.PostRepository;
 import com.sc.post.hardy.repository.UserRepository;
@@ -35,6 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.util.List;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -58,6 +61,8 @@ public class AuthServiceImpl implements AuthService {
     private FollowRepository followRepository;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     public UserModel getById(Long id) {
         var optUser = userRepository.findById(id);
@@ -66,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
             userModel.setFollowerCount(followRepository.countByFollowerUserId(id));
             userModel.setFollowCount(followRepository.countByFollowUserId(id));
             userModel.setPostCount(postRepository.countByUserId(id));
+            userModel.setCommentCount(commentRepository.countByUserId(id));
             return userModel;
         } else {
             throw new NotFoundException(id.toString());
@@ -85,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
     public UserModel updateUser(UserModel userModel) {
         var optUser = userRepository.findById(userModel.getId());
         if (optUser.isPresent()) {
-            var user = optUser.get();
+            var user = UserMapper.mapTo(userModel);
             user.setPassword(passwordEncoder.encode(userModel.getPassword()));
             return UserMapper.mapTo(userRepository.saveAndFlush(user));
         } else {
@@ -222,6 +228,18 @@ public class AuthServiceImpl implements AuthService {
         } else {
             throw new NotFoundException(followUserId.toString().concat(followerUserId.toString()));
         }
+    }
+
+    public List<UserModel> getFollowListByUserId(Long userId) {
+        var followList = followRepository.findByFollowUserId(userId);
+        var userIdList = followList.stream().map(FollowEntity::getFollowerUserId).toList();
+        return UserMapper.mapToList(userRepository.findByIdIn(userIdList));
+    }
+
+    public List<UserModel> getFollowerListByUserId(Long userId) {
+        var followList = followRepository.findByFollowerUserId(userId);
+        var userIdList = followList.stream().map(FollowEntity::getFollowUserId).toList();
+        return UserMapper.mapToList(userRepository.findByIdIn(userIdList));
     }
 
 }

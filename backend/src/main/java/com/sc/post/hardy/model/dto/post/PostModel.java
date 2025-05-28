@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,4 +33,5 @@ public class PostModel extends BaseModel {
     private String name;
     private Boolean isLiked;
     private Boolean isFollowed;
+    private List<CommentModel> commentModelList;
 }

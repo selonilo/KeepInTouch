@@ -14,7 +14,7 @@ import { UserModel } from '../auth/model/user.model';
 export class AuthService {
     private apiUrl = PROJECT_CONSTANTS.API_URL + 'auth';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     getById(id: number): Observable<UserModel> {
         return this.http.get<UserModel>(this.apiUrl + '/get/' + id);
@@ -56,5 +56,13 @@ export class AuthService {
 
     unFollowUser(followUserId: number, followerUserId: number): Observable<void> {
         return this.http.put<void>(this.apiUrl + '/unFollowUser/' + followUserId + '/' + followerUserId, "");
+    }
+
+    getFollowListByUserId(userId: number): Observable<UserModel[]> {
+        return this.http.get<UserModel[]>(this.apiUrl + '/getFollowListByUserId/' + userId);
+    }
+
+    getFollowerListByUserId(userId: number): Observable<UserModel[]> {
+        return this.http.get<UserModel[]>(this.apiUrl + '/getFollowerListByUserId/' + userId);
     }
 }

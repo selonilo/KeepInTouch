@@ -5,6 +5,8 @@ import { PROJECT_CONSTANTS } from '../constant/project.constants';
 import { PostModel } from '../post/model/post.model';
 import { PostQueryModel } from '../post/model/post.query.model';
 import { Page } from '../common/model/page.model';
+import { TotalStatsModel } from '../dashboard/components/statswidget/model/total-stats.model';
+import { CommentModel } from '../post/model/comment.model';
 
 @Injectable({
     providedIn: 'root'
@@ -66,6 +68,14 @@ export class PostService {
 
     deleteImage(postId: number | undefined): Observable<void> {
         return this.http.delete<void>(this.apiUrl + '/deleteImage/' + postId);
+    }
+
+    getTotalStats(): Observable<TotalStatsModel> {
+        return this.http.get<TotalStatsModel>(this.apiUrl + '/getTotalStats');
+    }
+
+    commentPost(commentModel: CommentModel): Observable<void> {
+        return this.http.post<void>(this.apiUrl + '/commentPost', commentModel);
     }
 
 }

@@ -30,6 +30,8 @@ import { Router } from '@angular/router';
 import { FileUploadModule } from 'primeng/fileupload';
 import { AvatarModule } from 'primeng/avatar';
 import { AuthService } from '../service/auth.service';
+import { AccordionModule } from 'primeng/accordion';
+import { CommentModel } from './model/comment.model';
 
 interface Column {
     field: string;
@@ -69,7 +71,8 @@ interface ExportColumn {
         ChipModule,
         FileUploadModule,
         AvatarModule,
-        TextareaModule
+        TextareaModule,
+        AccordionModule
     ],
     templateUrl: 'post.html',
     providers: [MessageService, PostService, ConfirmationService],
@@ -77,41 +80,26 @@ interface ExportColumn {
 })
 export class Post implements OnInit {
     @Input() isProfilePage: boolean = false;
-
     formDialog: boolean = false;
-
     submitted: boolean = false;
-
     postTypeList = Object.keys(EnumPostType).map((key) => ({
         label: EnumPostType[key as keyof typeof EnumPostType],
         value: key
     }));
-
     @ViewChild('dt') dt!: Table;
-
     exportColumns!: ExportColumn[];
-
     cols!: Column[];
-
     tableList: PostModel[] = [];
-
     selectedItem!: PostModel;
-
     loading: boolean = false;
-
     totalRecords: number = 0;
-
     pageSize: number = 10;
-
     currentPage: number = 0;
-
     layout: 'list' | 'grid' = 'list';
-
     options = ['list', 'grid'];
-
     userId?: number;
-
     filePath: string = PROJECT_CONSTANTS.FILE_PATH;
+    comment: string = '';
 
     constructor(
         private messageService: MessageService,
@@ -363,5 +351,35 @@ export class Post implements OnInit {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Message Content' });
             }
         });
+    }
+
+    openCommentInput(post: PostModel) {
+        post.showCommentInput = !post.showCommentInput;
+    }
+
+    commentPost(post: PostModel) {
+        const commentModel: CommentModel = {
+            userId: Number(localStorage.getItem('userId')),
+            postId: post.id,
+            comment: this.comment
+        }
+        this.service.commentPost(commentModel).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Başarılı',
+                    detail: 'Kaydedildi',
+                    life: 3000
+                });
+                this.findPostWithPagination();
+            },
+            error: (err) => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Message Content' });
+            }
+        })
+    }
+
+    showComment(post: PostModel) {
+        post.showComment = !post.showComment;
     }
 }

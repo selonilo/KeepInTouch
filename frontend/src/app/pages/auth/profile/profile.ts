@@ -16,11 +16,13 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { PROJECT_CONSTANTS } from '../../constant/project.constants';
 import { AvatarModule } from 'primeng/avatar';
 import { CommonModule } from '@angular/common';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 
 @Component({
     selector: 'app-profile',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, CardModule, Post, FileUploadModule, AvatarModule, CommonModule],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, CardModule, Post, FileUploadModule, AvatarModule, CommonModule, OverlayBadgeModule, AvatarGroupModule],
     providers: [MessageService],
     templateUrl: 'profile.html',
     styleUrls: ['profile.scss']
@@ -28,21 +30,13 @@ import { CommonModule } from '@angular/common';
 export class Profile implements OnInit {
 
     filePath: string = PROJECT_CONSTANTS.FILE_PATH;
-
     id?: number;
-
     mail: string = '';
-
     name: string = '';
-
     surname: string = '';
-
     location: string = '';
-
     password: string = '';
-
     imageUrl: string = '';
-
     userModel: UserModel = {
         name: "",
         surname: "",
@@ -54,14 +48,12 @@ export class Profile implements OnInit {
         followCount: 0,
         followerCount: 0
     }
-
     isMyPage: boolean = false;
-
     postCount: number = 0;
-
     followCount: number = 0;
-
     followerCount: number = 0;
+    followUserList: UserModel[] = [];
+    followerUserList: UserModel[] = [];
 
     constructor(
         private service: AuthService,
@@ -74,18 +66,28 @@ export class Profile implements OnInit {
         const userId = history.state.userId;
         this.isMyPage = userId == undefined || userId == Number(localStorage.getItem('userId'));
         this.service.getById(userId ? userId : Number(localStorage.getItem('userId'))).subscribe({
-                next: (data) => {
-                    this.id = data.id;
-                    this.mail = data.mail;
-                    this.name = data.name;
-                    this.surname = data.surname;
-                    this.location = data.location;
-                    this.imageUrl = data.imageUrl;
-                    this.postCount = data.postCount;
-                    this.followCount = data.followCount;
-                    this.followerCount = data.followerCount;
-                }
-            })
+            next: (data) => {
+                this.id = data.id;
+                this.mail = data.mail;
+                this.name = data.name;
+                this.surname = data.surname;
+                this.location = data.location;
+                this.imageUrl = data.imageUrl;
+                this.postCount = data.postCount;
+                this.followCount = data.followCount;
+                this.followerCount = data.followerCount;
+            }
+        })
+        this.service.getFollowListByUserId(userId ? userId : Number(localStorage.getItem('userId'))).subscribe({
+            next: (data) => {
+                this.followUserList = data;
+            }
+        });
+        this.service.getFollowerListByUserId(userId ? userId : Number(localStorage.getItem('userId'))).subscribe({
+            next: (data) => {
+                this.followerUserList = data;
+            }
+        });
     }
 
     update() {
@@ -95,6 +97,7 @@ export class Profile implements OnInit {
         this.userModel.name = this.name;
         this.userModel.surname = this.surname;
         this.userModel.location = this.location;
+        this.userModel.imageUrl = this.imageUrl;
         this.service.update(this.userModel).subscribe({
             next: (data) => {
                 this.messageService.add({ severity: 'success', summary: 'Başarılı', detail: 'İşlem başarılı', life: 3000 });
@@ -130,5 +133,21 @@ export class Profile implements OnInit {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resim Silinirken Hata Oluştu.' });
             }
         });
+    }
+
+    get firstThreeUsers() {
+        return this.followUserList.slice(0, 3);
+    }
+
+    get remainingUserCount() {
+        return this.followUserList.length > 3 ? this.followUserList.length - 3 : 0;
+    }
+
+    get firstThreeUsersFollower() {
+        return this.followerUserList.slice(0, 3);
+    }
+
+    get remainingUserCountFollower() {
+        return this.followerUserList.length > 3 ? this.followerUserList.length - 3 : 0;
     }
 }

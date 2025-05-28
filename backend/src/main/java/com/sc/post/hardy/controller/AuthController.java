@@ -1,6 +1,7 @@
 package com.sc.post.hardy.controller;
 
 import com.sc.post.hardy.model.dto.ResponseMessageModel;
+import com.sc.post.hardy.model.dto.post.PostModel;
 import com.sc.post.hardy.model.dto.user.LoginModel;
 import com.sc.post.hardy.model.dto.user.PasswordRefreshModel;
 import com.sc.post.hardy.model.dto.user.TokenModel;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -79,5 +81,15 @@ public class AuthController {
     @PutMapping("/unFollowUser/{followUserId}/{followerUserId}")
     public void unFollowUser(@PathVariable(name = "followUserId") @NotNull Long followUserId, @PathVariable(name = "followerUserId") @NotNull Long followerUserId) {
         authService.unFollowUser(followUserId, followerUserId);
+    }
+
+    @GetMapping("/getFollowListByUserId/{userId}")
+    public ResponseEntity<List<UserModel>> getFollowListByUserId(@PathVariable(name = "userId") @NotNull Long userId) {
+        return ResponseEntity.ok(authService.getFollowListByUserId(userId));
+    }
+
+    @GetMapping("/getFollowerListByUserId/{userId}")
+    public ResponseEntity<List<UserModel>> getFollowerListByUserId(@PathVariable(name = "userId") @NotNull Long userId) {
+        return ResponseEntity.ok(authService.getFollowerListByUserId(userId));
     }
 }

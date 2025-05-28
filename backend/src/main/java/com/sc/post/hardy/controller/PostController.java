@@ -1,5 +1,7 @@
 package com.sc.post.hardy.controller;
 
+import com.sc.post.hardy.model.dto.TotalStatsModel;
+import com.sc.post.hardy.model.dto.post.CommentModel;
 import com.sc.post.hardy.model.dto.post.PostModel;
 import com.sc.post.hardy.model.dto.post.PostQueryModel;
 import com.sc.post.hardy.service.PostService;
@@ -88,5 +90,15 @@ public class PostController {
     @DeleteMapping("/deleteImage/{postId}")
     public void deleteImage(@PathVariable Long postId) {
         postService.deleteImage(postId);
+    }
+
+    @GetMapping("/getTotalStats")
+    public ResponseEntity<TotalStatsModel> getTotalStats() {
+        return ResponseEntity.ok(postService.getTotalStats());
+    }
+
+    @PostMapping("/commentPost")
+    public void commentPost(@RequestBody CommentModel commentModel) {
+        postService.commentPost(commentModel);
     }
 }

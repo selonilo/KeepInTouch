@@ -12,16 +12,40 @@
                     </div>
 
                     <div class="flex justify-center items-center gap-2">
-                        <p-button label="Gönderi" icon="pi pi-book" badge="{{postCount}}" badgeSeverity="danger" styleClass="mb-2 mt-2"></p-button>
-                        <p-button label="Takipçi" icon="pi pi-users" badge="{{followCount}}" badgeSeverity="danger" styleClass="mb-2 mt-2"></p-button>
-                        <p-button label="Takip" icon="pi pi-users" badge="{{followerCount}}" badgeSeverity="danger" styleClass="mb-2 mt-2"></p-button>
+                        <span *ngIf="firstThreeUsers.length > 0">Takipçi</span>
+                        <p-avatar-group class="mr-5">
+                            <ng-container *ngFor="let item of firstThreeUsers">
+                                <p-avatar *ngIf="item.imageUrl" [image]="filePath + item.imageUrl" size="large"
+                                    shape="circle"></p-avatar>
+                                <p-avatar *ngIf="!item.imageUrl" icon="pi pi-user" size="large"
+                                    shape="circle"></p-avatar>
+                            </ng-container>
+
+                            <p-avatar *ngIf="remainingUserCount > 0" [label]="'+' + remainingUserCount" shape="circle"
+                                size="large" />
+                        </p-avatar-group>
+
+
+                        <span *ngIf="firstThreeUsersFollower.length > 0">Takip</span>
+                        <p-avatar-group>
+                            <ng-container *ngFor="let item of firstThreeUsersFollower">
+                                <p-avatar *ngIf="item.imageUrl" [image]="filePath + item.imageUrl" size="large"
+                                    shape="circle"></p-avatar>
+                                <p-avatar *ngIf="!item.imageUrl" icon="pi pi-user" size="large"
+                                    shape="circle"></p-avatar>
+                            </ng-container>
+
+                            <p-avatar *ngIf="remainingUserCountFollower > 0" [label]="'+' + remainingUserCountFollower"
+                                shape="circle" size="large" />
+                        </p-avatar-group>
                     </div>
 
                     <div *ngIf="!imageUrl && isMyPage" class="col-span-full lg:col-span-6">
                         <div class="card">
                             <div class="font-semibold text-xl mb-4">Resim</div>
                             <p-fileUpload #uploader name="file" [customUpload]="true" (uploadHandler)="onUpload($event)"
-                                accept="image/*" maxFileSize="1000000" chooseLabel="Dosya Seç" cancelLabel="İptal" uploadLabel="Yükle">
+                                accept="image/*" maxFileSize="1000000" chooseLabel="Dosya Seç" cancelLabel="İptal"
+                                uploadLabel="Yükle">
                             </p-fileUpload>
                         </div>
                     </div>

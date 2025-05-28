@@ -90,7 +90,7 @@
                                         [rounded]="true" [outlined]="true" (click)="delete(item)" />
                                 </div>
                             </div>
-                            <div *ngIf="item.showCommentInput" class="mt-2">
+                            <div *ngIf="item.showCommentInput" class="mt-2 mb-2">
                                 <label for="title" class="block font-bold mb-3">Yorum Yaz</label>
 
                                 <div class="flex items-center gap-2">
@@ -107,12 +107,12 @@
                                 <p-accordion-panel *ngFor="let comment of item.commentModelList; let i = index"
                                     [value]="i">
                                     <p-accordion-header>
-                                        <p-chip *ngIf="comment.userModel.imageUrl" [label]="item.name"
+                                        <p-chip *ngIf="comment.userModel.imageUrl" [label]="comment.userModel.name"
                                             class="chip-pointer" [image]="filePath + comment.userModel.imageUrl"
                                             styleClass="m-0">
                                         </p-chip>
 
-                                        <p-chip *ngIf="!comment.userModel.imageUrl" [label]="item.name"
+                                        <p-chip *ngIf="!comment.userModel.imageUrl" [label]="comment.userModel.name"
                                             class="chip-pointer" icon="pi pi-user" styleClass="m-0">
                                         </p-chip>
                                     </p-accordion-header>

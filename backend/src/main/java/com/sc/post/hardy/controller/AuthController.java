@@ -70,4 +70,14 @@ public class AuthController {
         String imageUrl = authService.getImage(userId);
         return ResponseEntity.ok(imageUrl);
     }
+
+    @PutMapping("/followUser/{followUserId}/{followerUserId}")
+    public void followUser(@PathVariable(name = "followUserId") @NotNull Long followUserId, @PathVariable(name = "followerUserId") @NotNull Long followerUserId) {
+        authService.followUser(followUserId, followerUserId);
+    }
+
+    @PutMapping("/unFollowUser/{followUserId}/{followerUserId}")
+    public void unFollowUser(@PathVariable(name = "followUserId") @NotNull Long followUserId, @PathVariable(name = "followerUserId") @NotNull Long followerUserId) {
+        authService.unFollowUser(followUserId, followerUserId);
+    }
 }

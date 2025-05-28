@@ -29,6 +29,7 @@ import { PROJECT_CONSTANTS } from '../constant/project.constants';
 import { Router } from '@angular/router';
 import { FileUploadModule } from 'primeng/fileupload';
 import { AvatarModule } from 'primeng/avatar';
+import { AuthService } from '../service/auth.service';
 
 interface Column {
     field: string;
@@ -67,7 +68,8 @@ interface ExportColumn {
         SelectButtonModule,
         ChipModule,
         FileUploadModule,
-        AvatarModule
+        AvatarModule,
+        TextareaModule
     ],
     templateUrl: 'post.html',
     providers: [MessageService, PostService, ConfirmationService],
@@ -115,7 +117,8 @@ export class Post implements OnInit {
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private service: PostService,
-        private router: Router
+        private router: Router,
+        private authService: AuthService
     ) { }
 
     exportCSV() {
@@ -324,6 +327,40 @@ export class Post implements OnInit {
             },
             error: () => {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resim Silinirken Hata Oluştu.' });
+            }
+        });
+    }
+
+    followUser(post: PostModel) {
+        this.authService.followUser(post.userId, Number(localStorage.getItem('userId'))).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Başarılı',
+                    detail: 'Kaydedildi',
+                    life: 3000
+                });
+                this.findPostWithPagination();
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        });
+    }
+
+    unFollowUser(post: PostModel) {
+        this.authService.unFollowUser(post.userId, Number(localStorage.getItem('userId'))).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Başarılı',
+                    detail: 'Kaydedildi',
+                    life: 3000
+                });
+                this.findPostWithPagination();
+            },
+            error: (err) => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Message Content' });
             }
         });
     }

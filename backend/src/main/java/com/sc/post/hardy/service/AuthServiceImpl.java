@@ -11,8 +11,12 @@ import com.sc.post.hardy.model.dto.user.LoginModel;
 import com.sc.post.hardy.model.dto.user.PasswordRefreshModel;
 import com.sc.post.hardy.model.dto.user.TokenModel;
 import com.sc.post.hardy.model.dto.user.UserModel;
+import com.sc.post.hardy.model.entity.FollowEntity;
+import com.sc.post.hardy.model.entity.LikeEntity;
 import com.sc.post.hardy.model.entity.UserEntity;
 import com.sc.post.hardy.model.mapper.UserMapper;
+import com.sc.post.hardy.repository.FollowRepository;
+import com.sc.post.hardy.repository.PostRepository;
 import com.sc.post.hardy.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -50,11 +54,19 @@ public class AuthServiceImpl implements AuthService {
     private String from;
     @Autowired
     SpringTemplateEngine templateEngine;
+    @Autowired
+    private FollowRepository followRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     public UserModel getById(Long id) {
         var optUser = userRepository.findById(id);
         if (optUser.isPresent()) {
-            return UserMapper.mapTo(optUser.get());
+            var userModel = UserMapper.mapTo(optUser.get());
+            userModel.setFollowerCount(followRepository.countByFollowerUserId(id));
+            userModel.setFollowCount(followRepository.countByFollowUserId(id));
+            userModel.setPostCount(postRepository.countByUserId(id));
+            return userModel;
         } else {
             throw new NotFoundException(id.toString());
         }
@@ -186,6 +198,30 @@ public class AuthServiceImpl implements AuthService {
             throw new NotFoundException(userId.toString().concat("Resim"));
         }
         return user.getImageUrl();
+    }
+
+    public void followUser(Long followUserId, Long followerUserId) {
+        var optFollowUser = userRepository.findById(followUserId);
+        var optFollowerUser = userRepository.findById(followerUserId);
+        if (optFollowUser.isPresent() && optFollowerUser.isPresent()) {
+            FollowEntity followEntity = new FollowEntity();
+            followEntity.setFollowUserId(followUserId);
+            followEntity.setFollowerUserId(followerUserId);
+            followRepository.saveAndFlush(followEntity);
+        } else {
+            throw new NotFoundException(followUserId.toString().concat(followerUserId.toString()));
+        }
+    }
+
+    public void unFollowUser(Long followUserId, Long followerUserId) {
+        var optFollowUser = userRepository.findById(followUserId);
+        var optFollowerUser = userRepository.findById(followerUserId);
+        if (optFollowUser.isPresent() && optFollowerUser.isPresent()) {
+            var optFollow = followRepository.findByFollowUserIdAndFollowerUserId(followUserId, followerUserId);
+            optFollow.ifPresent(followEntity -> followRepository.delete(followEntity));
+        } else {
+            throw new NotFoundException(followUserId.toString().concat(followerUserId.toString()));
+        }
     }
 
 }

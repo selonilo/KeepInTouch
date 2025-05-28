@@ -16,4 +16,5 @@ export interface PostModel {
     imageUrl: string;
     userImageUrl: string;
     name: string;
+    isFollowed: boolean;
 }

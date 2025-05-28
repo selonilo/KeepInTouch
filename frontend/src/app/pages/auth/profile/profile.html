@@ -11,11 +11,17 @@
                         </a>
                     </div>
 
+                    <div class="flex justify-center items-center gap-2">
+                        <p-button label="Gönderi" icon="pi pi-book" badge="{{postCount}}" badgeSeverity="danger" styleClass="mb-2 mt-2"></p-button>
+                        <p-button label="Takipçi" icon="pi pi-users" badge="{{followCount}}" badgeSeverity="danger" styleClass="mb-2 mt-2"></p-button>
+                        <p-button label="Takip" icon="pi pi-users" badge="{{followerCount}}" badgeSeverity="danger" styleClass="mb-2 mt-2"></p-button>
+                    </div>
+
                     <div *ngIf="!imageUrl && isMyPage" class="col-span-full lg:col-span-6">
                         <div class="card">
-                            <div class="font-semibold text-xl mb-4">Advanced</div>
+                            <div class="font-semibold text-xl mb-4">Resim</div>
                             <p-fileUpload #uploader name="file" [customUpload]="true" (uploadHandler)="onUpload($event)"
-                                accept="image/*" maxFileSize="1000000" chooseLabel="Dosya Seç">
+                                accept="image/*" maxFileSize="1000000" chooseLabel="Dosya Seç" cancelLabel="İptal" uploadLabel="Yükle">
                             </p-fileUpload>
                         </div>
                     </div>

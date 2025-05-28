@@ -55,11 +55,10 @@ import { PROJECT_CONSTANTS } from '../../pages/constant/project.constants';
                     <button type="button" class="layout-topbar-action" (click)="menu.toggle($event)">
                         <i *ngIf="!imageUrl" class="pi pi-user"></i>
                         <p-avatar *ngIf="imageUrl" [image]="filePath + imageUrl" size="normal" shape="circle"></p-avatar>
-                        <span>Profil</span>
                     </button>
                 </div>
             </div>
-            <p-menu #menu [model]="items" [popup]="true" />
+            <p-menu #menu [model]="items" [popup]="true" appendTo="body"/>
         </div>
     </div>`
 })

@@ -49,4 +49,12 @@ export class AuthService {
     getImage(userId: number): Observable<string> {
         return this.http.get<string>(this.apiUrl + '/getImage/' + userId);
     }
+
+    followUser(followUserId: number, followerUserId: number): Observable<void> {
+        return this.http.put<void>(this.apiUrl + '/followUser/' + followUserId + '/' + followerUserId, "");
+    }
+
+    unFollowUser(followUserId: number, followerUserId: number): Observable<void> {
+        return this.http.put<void>(this.apiUrl + '/unFollowUser/' + followUserId + '/' + followerUserId, "");
+    }
 }

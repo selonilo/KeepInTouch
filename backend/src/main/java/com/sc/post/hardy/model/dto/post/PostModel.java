@@ -30,4 +30,5 @@ public class PostModel extends BaseModel {
     private String userImageUrl;
     private String name;
     private Boolean isLiked;
+    private Boolean isFollowed;
 }

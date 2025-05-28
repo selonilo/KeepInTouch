@@ -6,13 +6,9 @@ import com.sc.post.hardy.model.dto.post.PostModel;
 import com.sc.post.hardy.model.dto.post.PostQueryModel;
 import com.sc.post.hardy.model.entity.LikeEntity;
 import com.sc.post.hardy.model.entity.PostEntity;
-import com.sc.post.hardy.model.entity.UserEntity;
 import com.sc.post.hardy.model.entity.ViewEntity;
 import com.sc.post.hardy.model.mapper.PostMapper;
-import com.sc.post.hardy.repository.LikeRepository;
-import com.sc.post.hardy.repository.PostRepository;
-import com.sc.post.hardy.repository.UserRepository;
-import com.sc.post.hardy.repository.ViewRepository;
+import com.sc.post.hardy.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -30,18 +26,16 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     @Value("${upload.path}")
     private String uploadPath;
-
     @Autowired
     private PostRepository postRepository;
-
     @Autowired
     private LikeRepository likeRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ViewRepository viewRepository;
+    @Autowired
+    private FollowRepository followRepository;
 
     public PostModel save(PostModel postModel) {
         return PostMapper.mapTo(postRepository.saveAndFlush(PostMapper.mapTo(postModel)));
@@ -97,6 +91,7 @@ public class PostServiceImpl implements PostService {
                 viewRepository.saveAndFlush(viewEntity);
             }
             post.setIsLiked(likeRepository.findByPostIdAndUserId(post.getId(), userId).isPresent());
+            post.setIsFollowed(followRepository.findByFollowUserIdAndFollowerUserId(post.getUserId(), userId).isPresent());
             post.setLikeNumber(likeRepository.countByPostId(post.getId()));
             post.setViewNumber(viewRepository.countByPostId(post.getId()));
             var optUser = userRepository.findById(post.getUserId());

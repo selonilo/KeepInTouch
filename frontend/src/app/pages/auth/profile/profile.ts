@@ -49,10 +49,19 @@ export class Profile implements OnInit {
         mail: "",
         password: "",
         location: "",
-        imageUrl: ""
+        imageUrl: "",
+        postCount: 0,
+        followCount: 0,
+        followerCount: 0
     }
 
     isMyPage: boolean = false;
+
+    postCount: number = 0;
+
+    followCount: number = 0;
+
+    followerCount: number = 0;
 
     constructor(
         private service: AuthService,
@@ -72,6 +81,9 @@ export class Profile implements OnInit {
                     this.surname = data.surname;
                     this.location = data.location;
                     this.imageUrl = data.imageUrl;
+                    this.postCount = data.postCount;
+                    this.followCount = data.followCount;
+                    this.followerCount = data.followerCount;
                 }
             })
     }

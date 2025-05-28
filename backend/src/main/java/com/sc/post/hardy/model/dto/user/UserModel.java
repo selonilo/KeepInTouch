@@ -18,4 +18,7 @@ public class UserModel extends BaseModel {
     private String password;
     private String location;
     private String imageUrl;
+    private Long postCount;
+    private Long followCount;
+    private Long followerCount;
 }

@@ -36,7 +36,10 @@ export class Register {
         mail: "",
         password: "",
         location: "",
-        imageUrl: ""
+        imageUrl: "",
+        postCount: 0,
+        followCount: 0,
+        followerCount: 0
     }
 
     constructor(

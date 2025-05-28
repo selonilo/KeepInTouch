@@ -18,4 +18,6 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     Page<PostEntity> findAllPost(@Param("title") String title, @Param("postType") EnumPostType postType, Pageable pageable);
 
     List<PostEntity> findAllByUserId(Long userId);
+
+    long countByUserId(Long userId);
 }

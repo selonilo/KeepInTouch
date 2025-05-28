@@ -7,4 +7,7 @@ export interface UserModel extends BaseModel {
     password: string;
     location: string;
     imageUrl: string;
+    postCount: number;
+    followCount: number;
+    followerCount: number;
 }

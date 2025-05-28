@@ -27,8 +27,6 @@ import { CommonModule } from '@angular/common';
 })
 export class Profile implements OnInit {
 
-    userId?: number;
-
     filePath: string = PROJECT_CONSTANTS.FILE_PATH;
 
     id?: number;
@@ -54,6 +52,8 @@ export class Profile implements OnInit {
         imageUrl: ""
     }
 
+    isMyPage: boolean = false;
+
     constructor(
         private service: AuthService,
         private router: Router,
@@ -62,9 +62,9 @@ export class Profile implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.route.paramMap.subscribe(params => {
-            this.userId = params.get('userId') ? Number(params.get('userId')) : Number(localStorage.getItem('userId'));
-            this.service.getById(this.userId).subscribe({
+        const userId = history.state.userId;
+        this.isMyPage = userId == undefined || userId == Number(localStorage.getItem('userId'));
+        this.service.getById(userId ? userId : Number(localStorage.getItem('userId'))).subscribe({
                 next: (data) => {
                     this.id = data.id;
                     this.mail = data.mail;
@@ -74,7 +74,6 @@ export class Profile implements OnInit {
                     this.imageUrl = data.imageUrl;
                 }
             })
-        });
     }
 
     update() {

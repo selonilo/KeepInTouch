@@ -30,6 +30,10 @@ export class PostService {
         return this.http.get<PostModel[]>(this.apiUrl + '/getListByUserId/' + userId);
     }
 
+    getListByUserIdAndLoginUserId(userId: number, loginUserId: number): Observable<PostModel[]> {
+        return this.http.get<PostModel[]>(this.apiUrl + '/getListByUserIdAndLoginUserId/' + userId + '/' + loginUserId);
+    }
+
     findPostWithPagination(page: number, size: number, queryModel: PostQueryModel): Observable<Page<PostModel>> {
         const params = new HttpParams()
             .set('page', page)
@@ -52,6 +56,16 @@ export class PostService {
 
     isLiked(postId: number, userId: number): Observable<boolean> {
         return this.http.get<boolean>(this.apiUrl + '/isLiked/' + postId + '/' + userId);
+    }
+
+    uploadImage(postId: number | undefined, file: File): Observable<{ imageUrl: string }> {
+        const formData = new FormData();
+        formData.append('file', file);
+        return this.http.post<{ imageUrl: string }>(this.apiUrl + '/uploadImage/' + postId, formData);
+    }
+
+    deleteImage(postId: number | undefined): Observable<void> {
+        return this.http.delete<void>(this.apiUrl + '/deleteImage/' + postId);
     }
 
 }

@@ -27,6 +27,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChipModule } from 'primeng/chip';
 import { PROJECT_CONSTANTS } from '../constant/project.constants';
 import { Router } from '@angular/router';
+import { FileUploadModule } from 'primeng/fileupload';
+import { AvatarModule } from 'primeng/avatar';
 
 interface Column {
     field: string;
@@ -63,10 +65,13 @@ interface ExportColumn {
         ConfirmDialogModule,
         DataViewModule,
         SelectButtonModule,
-        ChipModule
+        ChipModule,
+        FileUploadModule,
+        AvatarModule
     ],
     templateUrl: 'post.html',
-    providers: [MessageService, PostService, ConfirmationService]
+    providers: [MessageService, PostService, ConfirmationService],
+    styleUrls: ['post.scss']
 })
 export class Post implements OnInit {
     @Input() isProfilePage: boolean = false;
@@ -104,8 +109,6 @@ export class Post implements OnInit {
 
     userId?: number;
 
-    imageUrl: string = '';
-
     filePath: string = PROJECT_CONSTANTS.FILE_PATH;
 
     constructor(
@@ -128,15 +131,28 @@ export class Post implements OnInit {
         this.loading = true;
         const queryModel: PostQueryModel = {};
         if (this.isProfilePage) {
-            this.service.getListByUserId(Number(localStorage.getItem('userId'))).subscribe({
-                next: (data) => {
-                    this.tableList = data;
-                    this.loading = false;
-                },
-                error: (err) => {
-                    console.log(err);
-                }
-            });
+            const userId = history.state.userId;
+            if (userId) {
+                this.service.getListByUserIdAndLoginUserId(userId, Number(localStorage.getItem('userId'))).subscribe({
+                    next: (data) => {
+                        this.tableList = data;
+                        this.loading = false;
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+                });
+            } else {
+                this.service.getListByUserId(Number(localStorage.getItem('userId'))).subscribe({
+                    next: (data) => {
+                        this.tableList = data;
+                        this.loading = false;
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+                });
+            }
         } else {
             this.service.getList(Number(localStorage.getItem('userId'))).subscribe({
                 next: (data) => {
@@ -272,6 +288,43 @@ export class Post implements OnInit {
     }
 
     routeProfile(userId: any) {
-        this.router.navigate(['/pages/profile', userId]);
+        this.router.navigate(['/pages/profile'], { state: { userId: userId } });
+    }
+
+    onUpload(event: any) {
+        const file: File = event.files[0];
+        if (file) {
+            this.service.uploadImage(this.selectedItem.id, file).subscribe({
+                next: (response) => {
+                    this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Resim Yüklendi.' });
+                    this.selectedItem.imageUrl = response.imageUrl;
+                    this.tableList.forEach(x => {
+                        if (this.selectedItem.id == x.id) {
+                            x.imageUrl = this.selectedItem.imageUrl;
+                        }
+                    })
+                },
+                error: () => {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resim Yüklenirken Hata Oluştu.' });
+                }
+            });
+        }
+    }
+
+    onDeleteImage() {
+        this.service.deleteImage(this.selectedItem.id).subscribe({
+            next: () => {
+                this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Resim Silindi.' });
+                this.selectedItem.imageUrl = '';
+                this.tableList.forEach(x => {
+                    if (this.selectedItem.id == x.id) {
+                        x.imageUrl = this.selectedItem.imageUrl;
+                    }
+                })
+            },
+            error: () => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resim Silinirken Hata Oluştu.' });
+            }
+        });
     }
 }

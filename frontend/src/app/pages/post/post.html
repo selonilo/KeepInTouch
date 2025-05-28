@@ -29,10 +29,11 @@
                         </div>
                         <div class="pt-12">
                             <div style="margin-bottom: 2rem;">
-                                <p-chip *ngIf="item.userImageUrl" [label]="item.name"
-                                    [image]="filePath + item.userImageUrl" styleClass="m-1" (click)="routeProfile(item.userId)"></p-chip>
-                                <p-chip *ngIf="!item.userImageUrl" [label]="item.name" icon="pi pi-user" (click)="routeProfile(item.userId)"
-                                    styleClass="m-1"></p-chip>
+                                <p-chip *ngIf="item.userImageUrl" [label]="item.name" class="chip-pointer"
+                                    [image]="filePath + item.userImageUrl" styleClass="m-1"
+                                    (click)="routeProfile(item.userId)"></p-chip>
+                                <p-chip *ngIf="!item.userImageUrl" [label]="item.name" class="chip-pointer"
+                                    icon="pi pi-user" (click)="routeProfile(item.userId)" styleClass="m-1"></p-chip>
                             </div>
                             <div class="flex flex-row justify-between items-start gap-2 w-full flex-wrap">
                                 <div class="min-w-0 flex-1">
@@ -83,6 +84,19 @@
 <p-dialog [(visible)]="formDialog" [style]="{ width: '450px' }" header="Gönderi Detayı" [modal]="true">
     <ng-template #content>
         <div class="flex flex-col gap-6">
+            <div *ngIf="!selectedItem.imageUrl" class="col-span-full lg:col-span-6">
+                <div class="card">
+                    <div class="font-semibold text-xl mb-4">Advanced</div>
+                    <p-fileUpload #uploader name="file" [customUpload]="true" (uploadHandler)="onUpload($event)"
+                        accept="image/*" maxFileSize="1000000" chooseLabel="Dosya Seç">
+                    </p-fileUpload>
+                </div>
+            </div>
+            <div class="avatar-container">
+                <p-avatar *ngIf="selectedItem.imageUrl" class="custom-avatar" [image]="filePath + selectedItem.imageUrl" size="xlarge"
+                    shape="circle"></p-avatar>
+                <p-button *ngIf="selectedItem.imageUrl" (onClick)="onDeleteImage()" label="Resmi Sil"></p-button>
+            </div>
             <div>
                 <label for="title" class="block font-bold mb-3">Başlık</label>
                 <input type="text" pInputText id="title" [(ngModel)]="selectedItem.title" required autofocus fluid />

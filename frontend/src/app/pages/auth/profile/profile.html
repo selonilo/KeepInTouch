@@ -4,8 +4,14 @@
             <div
                 style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
                 <div class="w-full bg-surface-0 dark:bg-surface-900 py-5 px-8 sm:px-5" style="border-radius: 53px">
+                    <div class="text-center">
+                        <a target="_blank" rel="noopener noreferrer"
+                            class="text-primary font-bold hover:underline text-xl inline-block">
+                            {{ name }}
+                        </a>
+                    </div>
 
-                    <div *ngIf="!imageUrl" class="col-span-full lg:col-span-6">
+                    <div *ngIf="!imageUrl && isMyPage" class="col-span-full lg:col-span-6">
                         <div class="card">
                             <div class="font-semibold text-xl mb-4">Advanced</div>
                             <p-fileUpload #uploader name="file" [customUpload]="true" (uploadHandler)="onUpload($event)"
@@ -14,40 +20,41 @@
                         </div>
                     </div>
                     <div class="avatar-container">
-                        <p-avatar *ngIf="imageUrl" class="custom-avatar" [image]="filePath + imageUrl" size="xlarge" shape="circle"></p-avatar>
-                        <p-button *ngIf="imageUrl" (onClick)="onDeleteImage()" label="Resmi Sil"></p-button>
+                        <p-avatar *ngIf="imageUrl" class="custom-avatar" [image]="filePath + imageUrl" size="xlarge"
+                            shape="circle"></p-avatar>
+                        <p-button *ngIf="imageUrl && isMyPage" (onClick)="onDeleteImage()" label="Resmi Sil"></p-button>
                     </div>
 
                     <form #registerForm="ngForm" novalidate>
                         <label for="name"
                             class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Adı</label>
                         <input pInputText id="name" name="name" type="text" placeholder="Adı"
-                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="name" required />
+                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="name" required [disabled]="!isMyPage" />
 
                         <label for="surname"
                             class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Soyadı</label>
                         <input pInputText id="surname" name="surname" type="text" placeholder="Soyadı"
-                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="surname" required />
+                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="surname" required [disabled]="!isMyPage" />
 
                         <label for="mail"
                             class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
                         <input pInputText id="mail" name="mail" type="email" placeholder="Mail adresi"
-                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="mail" required email />
+                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="mail" required email [disabled]="!isMyPage" />
 
                         <label for="password"
                             class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Şifre</label>
                         <p-password id="password" name="password" [(ngModel)]="password" placeholder="Şifre"
                             [toggleMask]="true" styleClass="w-full md:w-[30rem] mb-8" [fluid]="true" [feedback]="false"
-                            required></p-password>
+                            required [disabled]="!isMyPage"></p-password>
 
                         <label for="location"
                             class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Lokasyon</label>
                         <input pInputText id="location" name="location" type="text" placeholder="Lokasyon"
-                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="location" required />
+                            class="w-full md:w-[30rem] mb-8" [(ngModel)]="location" required [disabled]="!isMyPage" />
 
                         <div class="w-full md:w-[30rem] mb-8">
-                            <p-button label="Güncelle" styleClass="w-full" [disabled]="!registerForm.valid"
-                                (onClick)="update()"></p-button>
+                            <p-button *ngIf="isMyPage" label="Güncelle" styleClass="w-full"
+                                [disabled]="!registerForm.valid" (onClick)="update()"></p-button>
                         </div>
                     </form>
 

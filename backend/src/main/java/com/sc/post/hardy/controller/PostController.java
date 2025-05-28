@@ -9,8 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/post")
@@ -54,6 +57,11 @@ public class PostController {
         return ResponseEntity.ok(postService.getListByUserId(userId));
     }
 
+    @GetMapping("/getListByUserIdAndLoginUserId/{userId}/{loginUserId}")
+    public ResponseEntity<List<PostModel>> getListByUserIdAndLoginUserId(@PathVariable(name = "userId") @NotNull Long userId, @PathVariable(name = "loginUserId") @NotNull Long loginUserId) {
+        return ResponseEntity.ok(postService.getListByUserIdAndLoginUserId(userId, loginUserId));
+    }
+
     @PostMapping("/queryPage")
     public ResponseEntity<Page<PostModel>> findPostWithPagination(Pageable pageable, @RequestBody PostQueryModel queryModel) {
         return ResponseEntity.ok(postService.findPostWithPagination(pageable, queryModel));
@@ -62,5 +70,23 @@ public class PostController {
     @GetMapping("/isLiked/{postId}/{userId}")
     public ResponseEntity<Boolean> isLiked(@PathVariable(name = "postId") @NotNull Long postId, @PathVariable(name = "userId") @NotNull Long userId) {
         return ResponseEntity.ok(postService.isLiked(postId, userId));
+    }
+
+    @PostMapping("/uploadImage/{postId}")
+    public ResponseEntity<Map<String, String>> uploadImage(
+            @PathVariable Long postId,
+            @RequestParam("file") MultipartFile file) {
+
+        String imageUrl = postService.uploadImage(postId, file);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("imageUrl", imageUrl);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/deleteImage/{postId}")
+    public void deleteImage(@PathVariable Long postId) {
+        postService.deleteImage(postId);
     }
 }

@@ -78,4 +78,8 @@ export class PostService {
         return this.http.post<void>(this.apiUrl + '/commentPost', commentModel);
     }
 
+    deleteComment(commentId: number | undefined): Observable<void> {
+        return this.http.delete<void>(this.apiUrl + '/deleteComment/' + commentId);
+    }
+
 }

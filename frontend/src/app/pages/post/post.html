@@ -91,10 +91,9 @@
                                 </div>
                             </div>
                             <div *ngIf="item.showCommentInput" class="mt-2 mb-2">
-                                <label for="title" class="block font-bold mb-3">Yorum Yaz</label>
-
+                                <label for="comment" class="block font-bold mb-3">Yorum Yaz</label>
                                 <div class="flex items-center gap-2">
-                                    <input type="text" pInputText id="title" [(ngModel)]="comment" required autofocus
+                                    <input type="text" pInputText id="comment" [(ngModel)]="comment" required autofocus
                                         class="flex-1" />
                                     <p-button icon="pi pi-save" styleClass="h-full" [outlined]="true"
                                         (onClick)="commentPost(item)"></p-button>
@@ -107,15 +106,32 @@
                                 <p-accordion-panel *ngFor="let comment of item.commentModelList; let i = index"
                                     [value]="i">
                                     <p-accordion-header>
-                                        <p-chip *ngIf="comment.userModel.imageUrl" [label]="comment.userModel.name"
-                                            class="chip-pointer" [image]="filePath + comment.userModel.imageUrl"
-                                            styleClass="m-0">
-                                        </p-chip>
+                                        <div class="w-full flex items-center justify-between gap-2">
+                                            <div class="flex items-center gap-2">
+                                                <p-chip *ngIf="comment.userModel.imageUrl"
+                                                        [label]="comment.userModel.name"
+                                                        class="chip-pointer"
+                                                        [image]="filePath + comment.userModel.imageUrl"
+                                                        styleClass="m-0">
+                                                </p-chip>
+                                                <p-chip *ngIf="!comment.userModel.imageUrl"
+                                                        [label]="comment.userModel.name"
+                                                        class="chip-pointer"
+                                                        icon="pi pi-user"
+                                                        styleClass="m-0">
+                                                </p-chip>
+                                            </div>
 
-                                        <p-chip *ngIf="!comment.userModel.imageUrl" [label]="comment.userModel.name"
-                                            class="chip-pointer" icon="pi pi-user" styleClass="m-0">
-                                        </p-chip>
+                                            <p-button *ngIf="userId == comment.userId"
+                                                      icon="pi pi-trash"
+                                                      styleClass="h-full mr-5"
+                                                      [outlined]="true"
+                                                      severity="danger"
+                                                      (onClick)="deleteComment(comment)">
+                                            </p-button>
+                                        </div>
                                     </p-accordion-header>
+
                                     <p-accordion-content>
                                         <p class="m-0">{{ comment.comment }}</p>
                                     </p-accordion-content>

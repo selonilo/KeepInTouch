@@ -101,4 +101,9 @@ public class PostController {
     public void commentPost(@RequestBody CommentModel commentModel) {
         postService.commentPost(commentModel);
     }
+
+    @DeleteMapping("/deleteComment/{commentId}")
+    public void deleteComment(@PathVariable(name = "commentId") Long commentId) {
+        postService.deleteComment(commentId);
+    }
 }

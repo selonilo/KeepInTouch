@@ -10,4 +10,5 @@ export interface UserModel extends BaseModel {
     postCount: number;
     followCount: number;
     followerCount: number;
+    commentCount: number;
 }

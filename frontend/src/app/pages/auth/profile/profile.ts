@@ -46,7 +46,8 @@ export class Profile implements OnInit {
         imageUrl: "",
         postCount: 0,
         followCount: 0,
-        followerCount: 0
+        followerCount: 0,
+        commentCount: 0
     }
     isMyPage: boolean = false;
     postCount: number = 0;

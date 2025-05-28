@@ -25,4 +25,5 @@ public interface PostService {
     void deleteImage(Long postId);
     TotalStatsModel getTotalStats();
     void commentPost(CommentModel commentModel);
+    void deleteComment(Long commentId);
 }

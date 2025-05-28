@@ -39,7 +39,8 @@ export class Register {
         imageUrl: "",
         postCount: 0,
         followCount: 0,
-        followerCount: 0
+        followerCount: 0,
+        commentCount: 0
     }
 
     constructor(

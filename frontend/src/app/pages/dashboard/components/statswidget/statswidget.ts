@@ -28,6 +28,7 @@ export class StatsWidget implements OnInit {
                 this.postCount = data.postCount;
                 this.followCount = data.followCount;
                 this.followerCount = data.followerCount;
+                this.commentCount = data.commentCount;
             }
         });
         this.postService.getTotalStats().subscribe({

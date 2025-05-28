@@ -112,6 +112,7 @@ public class PostServiceImpl implements PostService {
             List<CommentModel> commentModelList = new ArrayList<>();
             for (var comment : commentList) {
                 CommentModel commentModel = new CommentModel();
+                commentModel.setId(comment.getId());
                 commentModel.setPostId(comment.getPostId());
                 commentModel.setUserId(comment.getUserId());
                 commentModel.setComment(comment.getComment());
@@ -149,6 +150,7 @@ public class PostServiceImpl implements PostService {
             List<CommentModel> commentModelList = new ArrayList<>();
             for (var comment : commentList) {
                 CommentModel commentModel = new CommentModel();
+                commentModel.setId(comment.getId());
                 commentModel.setPostId(comment.getPostId());
                 commentModel.setUserId(comment.getUserId());
                 commentModel.setComment(comment.getComment());
@@ -186,6 +188,7 @@ public class PostServiceImpl implements PostService {
             List<CommentModel> commentModelList = new ArrayList<>();
             for (var comment : commentList) {
                 CommentModel commentModel = new CommentModel();
+                commentModel.setId(comment.getId());
                 commentModel.setPostId(comment.getPostId());
                 commentModel.setUserId(comment.getUserId());
                 commentModel.setComment(comment.getComment());
@@ -255,7 +258,6 @@ public class PostServiceImpl implements PostService {
         totalStatsModel.setTotalLikeCount(likeRepository.count());
         totalStatsModel.setTotalUserCount(userRepository.count());
         totalStatsModel.setTotalCommentCount(commentRepository.count());
-        totalStatsModel.setTotalCommentCount(0L);
         return totalStatsModel;
     }
 
@@ -270,6 +272,15 @@ public class PostServiceImpl implements PostService {
             commentRepository.saveAndFlush(commentEntity);
         } else {
             throw new NotFoundException(commentModel.getPostId().toString().concat(commentModel.getUserId().toString()));
+        }
+    }
+
+    public void deleteComment(Long commentId) {
+        var optComment = commentRepository.findById(commentId);
+        if (optComment.isPresent()) {
+            optComment.ifPresent(commentEntity -> commentRepository.delete(commentEntity));
+        } else {
+            throw new NotFoundException(commentId.toString());
         }
     }
 }

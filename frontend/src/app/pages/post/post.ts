@@ -119,6 +119,7 @@ export class Post implements OnInit {
     }
 
     findPostWithPagination(page: number = 0, size: number = 10) {
+        this.comment = "";
         this.loading = true;
         const queryModel: PostQueryModel = {};
         if (this.isProfilePage) {
@@ -381,5 +382,22 @@ export class Post implements OnInit {
 
     showComment(post: PostModel) {
         post.showComment = !post.showComment;
+    }
+
+    deleteComment(comment: CommentModel) {
+        this.service.deleteComment(comment.id).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Başarılı',
+                    detail: 'Kaydedildi',
+                    life: 3000
+                });
+                this.findPostWithPagination();
+            },
+            error: (err) => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Message Content' });
+            }
+        })
     }
 }

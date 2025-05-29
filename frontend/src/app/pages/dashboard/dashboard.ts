@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NotificationsWidget } from './components/notificationswidget';
+import { NotificationsWidget } from './components/notifications/notificationswidget';
 import { StatsWidget } from './components/statswidget/statswidget';
 import { MyPosts } from './components/my-posts/my-posts';
 import { RateByPosttype } from './components/rate-by-posttype/rate-by-posttype';
@@ -13,10 +13,10 @@ import { RevenueStreamWidget } from './components/revenuestreamwidget';
             <app-stats-widget class="contents" />
             <div class="col-span-12 xl:col-span-6">
                 <app-my-posts />
-                <app-rate-by-posttype />
+                <!-- <app-rate-by-posttype /> -->
             </div>
             <div class="col-span-12 xl:col-span-6">
-                <app-revenue-stream-widget />
+                <!-- <app-revenue-stream-widget /> -->
                 <app-notifications-widget />
             </div>
         </div>

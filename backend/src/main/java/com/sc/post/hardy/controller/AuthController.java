@@ -1,5 +1,6 @@
 package com.sc.post.hardy.controller;
 
+import com.sc.post.hardy.model.dto.NotificationModel;
 import com.sc.post.hardy.model.dto.ResponseMessageModel;
 import com.sc.post.hardy.model.dto.post.PostModel;
 import com.sc.post.hardy.model.dto.user.LoginModel;
@@ -91,5 +92,10 @@ public class AuthController {
     @GetMapping("/getFollowerListByUserId/{userId}")
     public ResponseEntity<List<UserModel>> getFollowerListByUserId(@PathVariable(name = "userId") @NotNull Long userId) {
         return ResponseEntity.ok(authService.getFollowerListByUserId(userId));
+    }
+
+    @GetMapping("/getNotification/{userId}")
+    public ResponseEntity<List<NotificationModel>> getNotification(@PathVariable(name = "userId") @NotNull Long userId) {
+        return ResponseEntity.ok(authService.getNotification(userId));
     }
 }

@@ -7,6 +7,7 @@ import { ResponseMessageModel } from '../common/model/response-message.model';
 import { LoginModel } from '../auth/model/login.model';
 import { TokenModel } from '../auth/model/token.model';
 import { UserModel } from '../auth/model/user.model';
+import { NotificationModel } from '../auth/model/notification.model';
 
 @Injectable({
     providedIn: 'root'
@@ -64,5 +65,9 @@ export class AuthService {
 
     getFollowerListByUserId(userId: number): Observable<UserModel[]> {
         return this.http.get<UserModel[]>(this.apiUrl + '/getFollowerListByUserId/' + userId);
+    }
+
+    getNotification(userId: number): Observable<NotificationModel[]> {
+        return this.http.get<NotificationModel[]>(this.apiUrl + '/getNotification/' + userId);
     }
 }

@@ -6,6 +6,7 @@ import com.sc.post.hardy.exception.AnErrorOccurredException;
 import com.sc.post.hardy.exception.MailOrPasswordIncorrectException;
 import com.sc.post.hardy.exception.NotFoundException;
 import com.sc.post.hardy.model.data.PostHardyConstant;
+import com.sc.post.hardy.model.dto.NotificationModel;
 import com.sc.post.hardy.model.dto.ResponseMessageModel;
 import com.sc.post.hardy.model.dto.TotalStatsModel;
 import com.sc.post.hardy.model.dto.user.LoginModel;
@@ -14,12 +15,10 @@ import com.sc.post.hardy.model.dto.user.TokenModel;
 import com.sc.post.hardy.model.dto.user.UserModel;
 import com.sc.post.hardy.model.entity.FollowEntity;
 import com.sc.post.hardy.model.entity.LikeEntity;
+import com.sc.post.hardy.model.entity.PostEntity;
 import com.sc.post.hardy.model.entity.UserEntity;
 import com.sc.post.hardy.model.mapper.UserMapper;
-import com.sc.post.hardy.repository.CommentRepository;
-import com.sc.post.hardy.repository.FollowRepository;
-import com.sc.post.hardy.repository.PostRepository;
-import com.sc.post.hardy.repository.UserRepository;
+import com.sc.post.hardy.repository.*;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,6 +63,8 @@ public class AuthServiceImpl implements AuthService {
     private PostRepository postRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
     public UserModel getById(Long id) {
         var optUser = userRepository.findById(id);
@@ -240,6 +242,35 @@ public class AuthServiceImpl implements AuthService {
         var followList = followRepository.findByFollowerUserId(userId);
         var userIdList = followList.stream().map(FollowEntity::getFollowUserId).toList();
         return UserMapper.mapToList(userRepository.findByIdIn(userIdList));
+    }
+
+    public List<NotificationModel> getNotification(Long userId) {
+        List<NotificationModel> notificationModelList = new ArrayList<>();
+        List<PostEntity> postList = postRepository.findAllByUserId(userId);
+        var postIdList = postList.stream().map(PostEntity::getId).toList();
+        var likeList = likeRepository.findAllByPostIdIn(postIdList);
+        for (var like : likeList.stream().filter(x -> !x.getUserId().equals(userId)).toList()) {
+            NotificationModel notificationModel = new NotificationModel();
+            notificationModel.setIcon("pi pi-heart-fill");
+            var optUser = userRepository.findById(like.getUserId());
+            optUser.ifPresent(userEntity -> notificationModel.setUserModel(UserMapper.mapTo(userEntity)));
+            var optPost = postRepository.findById(like.getPostId());
+            optPost.ifPresent(postEntity -> notificationModel.setNotificationMessage(postEntity.getTitle().concat(" Başlıklı gönderini beğendi")));
+            notificationModel.setNotificationDate(like.getCreatedDate());
+            notificationModelList.add(notificationModel);
+        }
+        var commentList = commentRepository.findAllByPostIdIn(postIdList);
+        for (var comment : commentList.stream().filter(x -> !x.getUserId().equals(userId)).toList()) {
+            NotificationModel notificationModel = new NotificationModel();
+            notificationModel.setIcon("pi pi-comment");
+            var optUser = userRepository.findById(comment.getUserId());
+            optUser.ifPresent(userEntity -> notificationModel.setUserModel(UserMapper.mapTo(userEntity)));
+            var optPost = postRepository.findById(comment.getPostId());
+            optPost.ifPresent(postEntity -> notificationModel.setNotificationMessage(postEntity.getTitle().concat(" Başlıklı gönderine yorum yaptı:".concat("\n").concat(comment.getComment()))));
+            notificationModel.setNotificationDate(comment.getCreatedDate());
+            notificationModelList.add(notificationModel);
+        }
+        return notificationModelList;
     }
 
 }

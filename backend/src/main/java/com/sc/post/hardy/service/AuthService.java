@@ -1,5 +1,6 @@
 package com.sc.post.hardy.service;
 
+import com.sc.post.hardy.model.dto.NotificationModel;
 import com.sc.post.hardy.model.dto.ResponseMessageModel;
 import com.sc.post.hardy.model.dto.user.LoginModel;
 import com.sc.post.hardy.model.dto.user.PasswordRefreshModel;
@@ -22,4 +23,5 @@ public interface AuthService {
     void unFollowUser(Long followUserId, Long followerUserId);
     List<UserModel> getFollowListByUserId(Long userId);
     List<UserModel> getFollowerListByUserId(Long userId);
+    List<NotificationModel> getNotification(Long userId);
 }

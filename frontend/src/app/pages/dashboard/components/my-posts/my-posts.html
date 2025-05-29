@@ -6,7 +6,7 @@
                 <th>Resim</th>
                 <th pSortableColumn="title">Başlık <p-sortIcon field="title"></p-sortIcon></th>
                 <th pSortableColumn="postType">Tür <p-sortIcon field="postType"></p-sortIcon></th>
-                <th>Detay</th>
+                <!-- <th>Detay</th> -->
             </tr>
         </ng-template>
         <ng-template #body let-post>
@@ -17,10 +17,10 @@
                 </td>
                 <td style="width: 35%; min-width: 7rem;">{{ post.title }}</td>
                 <td style="width: 35%; min-width: 8rem;">{{ post.postType }}</td>
-                <td style="width: 15%;">
+                <!-- <td style="width: 15%;">
                     <button pButton pRipple type="button" icon="pi pi-search"
                         class="p-button p-component p-button-text p-button-icon-only"></button>
-                </td>
+                </td> -->
             </tr>
         </ng-template>
     </p-table>

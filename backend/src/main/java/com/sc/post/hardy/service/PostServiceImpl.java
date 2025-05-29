@@ -116,6 +116,7 @@ public class PostServiceImpl implements PostService {
                 commentModel.setPostId(comment.getPostId());
                 commentModel.setUserId(comment.getUserId());
                 commentModel.setComment(comment.getComment());
+                commentModel.setCreatedDate(comment.getCreatedDate());
                 var optCommentUser = userRepository.findById(comment.getUserId());
                 optCommentUser.ifPresent(userEntity -> commentModel.setUserModel(UserMapper.mapTo(userEntity)));
                 commentModelList.add(commentModel);
@@ -154,6 +155,7 @@ public class PostServiceImpl implements PostService {
                 commentModel.setPostId(comment.getPostId());
                 commentModel.setUserId(comment.getUserId());
                 commentModel.setComment(comment.getComment());
+                commentModel.setCreatedDate(comment.getCreatedDate());
                 var optCommentUser = userRepository.findById(comment.getUserId());
                 optCommentUser.ifPresent(userEntity -> commentModel.setUserModel(UserMapper.mapTo(userEntity)));
                 commentModelList.add(commentModel);
@@ -192,6 +194,7 @@ public class PostServiceImpl implements PostService {
                 commentModel.setPostId(comment.getPostId());
                 commentModel.setUserId(comment.getUserId());
                 commentModel.setComment(comment.getComment());
+                commentModel.setCreatedDate(comment.getCreatedDate());
                 var optCommentUser = userRepository.findById(comment.getUserId());
                 optCommentUser.ifPresent(userEntity -> commentModel.setUserModel(UserMapper.mapTo(userEntity)));
                 commentModelList.add(commentModel);

@@ -1,4 +1,4 @@
 export const PROJECT_CONSTANTS = {
-    API_URL: 'http://localhost:8080/',
-    FILE_PATH: 'http://localhost:8080',
+    API_URL: 'https://keepintouchjar-2.onrender.com/',
+    FILE_PATH: 'https://keepintouchjar-2.onrender.com',
 };
